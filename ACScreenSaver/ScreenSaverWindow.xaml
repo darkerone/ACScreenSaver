@@ -12,8 +12,13 @@
         KeyUp="ScreenSaverWindow_KeyUp"
         MouseUp="ScreenSaver_Window_MouseUp">
     <Grid>
-        <Grid x:Name="Image_Block" Background="Black" Visibility="Collapsed" Margin="-2">
+        <Grid x:Name="Image_Block" Background="Black" Visibility="Hidden" Margin="-2">
             <Image x:Name="ScreenSaver_Image"></Image>
+            <TextBlock x:Name="Timer_TextBlock" HorizontalAlignment="Right" Margin="10" VerticalAlignment="Top" Foreground="White">
+                <TextBlock.Effect>
+                    <DropShadowEffect ShadowDepth="0" Color="Black" BlurRadius="10" />
+                </TextBlock.Effect>
+            </TextBlock>
         </Grid>
         <DockPanel x:Name="Informations_Block" Margin="5">
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
@@ -36,8 +41,8 @@
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Chemin de l'image : "></TextBlock>
                     <TextBlock Grid.Row="1" Grid.Column="1" x:Name="ImageDirectoryName_TextBlock"></TextBlock>
                     <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal">
-                        <Button Content="A supprimer" Margin="5,0" Click="Button_AddToDeleted"></Button>
-                        <Button Content="Ne plus afficher" Margin="5,0" Click="Button_AddToNotDisplayed"></Button>
+                        <Button x:Name="Button_AddToDeleted" Content="A supprimer" Margin="5,0" Click="Button_AddToDeleted_Click"></Button>
+                        <Button x:Name="Button_AddToNotDisplayed" Content="Ne plus afficher" Margin="5,0" Click="Button_AddToNotDisplayed_Click"></Button>
                     </StackPanel>
                     
                 </Grid>

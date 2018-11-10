@@ -29,23 +29,8 @@ namespace ACScreenSaver
         {
             InitializeComponent();
 
-            if (File.Exists(_configurationFilePath))
-            {
-                string json = System.IO.File.ReadAllText(_configurationFilePath);
-                var jsonSerializerSettings = new JsonSerializerSettings()
-                {
-                    TypeNameHandling = TypeNameHandling.All,
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                };
-                _configurationModel = JsonConvert.DeserializeObject<ConfigurationModel>(json, jsonSerializerSettings);
-            }
-            else
-            {
-                _configurationModel = new ConfigurationModel();
-                _configurationModel.ImagesDirectoryPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures); ;
-                _configurationModel.IntervalTime = 10;
-                _configurationModel.IsRandom = true;
-            }
+            _configurationModel = new ConfigurationModel();
+            _configurationModel.RestoreConfiguration();
 
             this.ImagesDirectoryPath_TextBlock.Text = _configurationModel.ImagesDirectoryPath;
             this.IntervalTime_IntegerUpDown.Value = _configurationModel.IntervalTime;
@@ -72,7 +57,7 @@ namespace ACScreenSaver
         private void Button_Valider_Click(object sender, RoutedEventArgs e)
         {
             _configurationModel.ImagesDirectoryPath = this.ImagesDirectoryPath_TextBlock.Text;
-            _configurationModel.IntervalTime = this.IntervalTime_IntegerUpDown.Value.Value;
+            _configurationModel.IntervalTime = this.IntervalTime_IntegerUpDown.Value.Value * 1000;
             _configurationModel.IsRandom = this.IsRandom_CheckBox.IsChecked.Value;
 
             var jsonSerializerSettings = new JsonSerializerSettings()

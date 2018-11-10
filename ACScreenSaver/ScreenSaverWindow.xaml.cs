@@ -23,8 +23,25 @@ namespace ACScreenSaver
     /// </summary>
     public partial class ScreenSaverWindow : Window
     {
+        /// <summary>
+        /// Définit si on est en plein écran ou non
+        /// </summary>
         private bool _isFullDisplay = true;
-        private Timer _timer;
+
+        /// <summary>
+        /// Timer pour gérer le temps d'affichage des photos
+        /// </summary>
+        private Timer _imageTimer;
+
+        /// <summary>
+        /// Définit si l'interval du timer des images a été modifié
+        /// </summary>
+        private bool _isIntervalTimerModified = false;
+
+        /// <summary>
+        /// Timer pour gérer le temps d'affichage du timer à l'écran
+        /// </summary>
+        private Timer _displayIntervalTimerTimer;
 
         private ScreenSaverManager _screenSaverManager;
 
@@ -34,9 +51,11 @@ namespace ACScreenSaver
 
             _screenSaverManager = new ScreenSaverManager();
 
-            _timer = new System.Timers.Timer();
-            _timer.Interval = _screenSaverManager.ConfigurationModel.IntervalTime * 1000;
-            _timer.Elapsed += _timer_Elapsed;
+            _imageTimer = new System.Timers.Timer();
+            _imageTimer.Interval = _screenSaverManager.ConfigurationModel.IntervalTime;
+            _imageTimer.Elapsed += _timer_Elapsed;
+
+            _displayIntervalTimerTimer = new System.Timers.Timer();
 
             DisplayFullScreenSaver();
         }
@@ -75,17 +94,29 @@ namespace ACScreenSaver
                 switch (e.Key)
                 {
                     case Key.Space:
-                        _timer.Enabled = !_timer.Enabled;
+                        _imageTimer.Enabled = !_imageTimer.Enabled;
                         break;
                     case Key.Left:
-                        _timer.Stop();
+                        _imageTimer.Stop();
                         GoToPreviousImage();
-                        _timer.Start();
+                        _imageTimer.Start();
                         break;
                     case Key.Right:
-                        _timer.Stop();
+                        _imageTimer.Stop();
                         GoToNextImage();
-                        _timer.Start();
+                        _imageTimer.Start();
+                        break;
+                    case Key.Up:
+                        _imageTimer.Stop();
+                        TemporarilyIncreaseTimer();
+                        DisplayTimerInterval(_screenSaverManager.ConfigurationModel.DisplayIntervalTimeTime);
+                        _imageTimer.Start();
+                        break;
+                    case Key.Down:
+                        _imageTimer.Stop();
+                        TemporarilyDecreaseTimer();
+                        DisplayTimerInterval(_screenSaverManager.ConfigurationModel.DisplayIntervalTimeTime);
+                        _imageTimer.Start();
                         break;
                     default:
                         DisplayInformations();
@@ -121,14 +152,16 @@ namespace ACScreenSaver
             });
         }
 
-        private void Button_AddToDeleted(object sender, RoutedEventArgs e)
+        private void Button_AddToDeleted_Click(object sender, RoutedEventArgs e)
         {
             _screenSaverManager.AddCurrentImageToDeleted();
+            Button_AddToDeleted.IsEnabled = false;
         }
 
-        private void Button_AddToNotDisplayed(object sender, RoutedEventArgs e)
+        private void Button_AddToNotDisplayed_Click(object sender, RoutedEventArgs e)
         {
             _screenSaverManager.AddCurrentImageToNotDisplayed();
+            Button_AddToNotDisplayed.IsEnabled = false;
         }
 
         #endregion
@@ -156,7 +189,7 @@ namespace ACScreenSaver
         {
             _isFullDisplay = true;
             GoToImageOfIndex(_screenSaverManager.GetCurrentImageIndex());
-            _timer.Start();
+            _imageTimer.Start();
 
             ScreenSaver_Window.WindowState = WindowState.Maximized;
             ScreenSaver_Window.WindowStyle = WindowStyle.None;
@@ -170,7 +203,7 @@ namespace ACScreenSaver
         private void DisplayInformations()
         {
             _isFullDisplay = false;
-            _timer.Stop();
+            _imageTimer.Stop();
 
             ScreenSaverInformation_Image.Source = ScreenSaver_Image.Source;
             string currentImagePath = _screenSaverManager.GetCurrentImagePath();
@@ -188,6 +221,8 @@ namespace ACScreenSaver
             ScreenSaver_Window.WindowStyle = WindowStyle.SingleBorderWindow;
             Image_Block.Visibility = Visibility.Collapsed;
             Informations_Block.Visibility = Visibility.Visible;
+            Button_AddToDeleted.IsEnabled = true;
+            Button_AddToNotDisplayed.IsEnabled = true;
         }
 
         /// <summary>
@@ -196,7 +231,13 @@ namespace ACScreenSaver
         /// <param name="imageFileIndex"></param>
         private void GoToImageOfIndex(int imageFileIndex)
         {
-
+            // Si l'interval du timer a été modifié
+            if (_isIntervalTimerModified)
+            {
+                // On lui redonne sa valeur initiale
+                _imageTimer.Interval = _screenSaverManager.ConfigurationModel.IntervalTime;
+                DisplayTimerInterval(0);
+            }
             _screenSaverManager.SetCurrentImageIndex(imageFileIndex);
             string nextImageFilePath = _screenSaverManager.GetCurrentImagePath();
             SetScreenSaverImage(nextImageFilePath);
@@ -240,6 +281,64 @@ namespace ACScreenSaver
             } while (!_screenSaverManager.CanDisplayImageOfIndex(imageFileIndex));
             
             GoToImageOfIndex(imageFileIndex);
+        }
+
+        /// <summary>
+        /// Augmente temporairement (le temps d'une image) l'interval du timer
+        /// </summary>
+        private void TemporarilyIncreaseTimer()
+        {
+            _imageTimer.Interval = _imageTimer.Interval + _screenSaverManager.ConfigurationModel.IntervalTimeGap;
+            _isIntervalTimerModified = true;
+        }
+
+        /// <summary>
+        /// Diminue temporairement (le temps d'une image) l'interval du timer
+        /// </summary>
+        private void TemporarilyDecreaseTimer()
+        {
+            int newTimerInterval = (int)_imageTimer.Interval - _screenSaverManager.ConfigurationModel.IntervalTimeGap;
+            if(newTimerInterval < 1000)
+            {
+                newTimerInterval = 1000;
+            }
+            _imageTimer.Interval = newTimerInterval;
+            _isIntervalTimerModified = true;
+        }
+
+        /// <summary>
+        /// Affiche l'interval du timer pendant le temps demandé
+        /// </summary>
+        /// <param name="displayTime">Temps (en seconde) d'affichage. Infini si null.</param>
+        private void DisplayTimerInterval(int? displayTime = null)
+        {
+            _displayIntervalTimerTimer.Stop();
+            if (displayTime == null)
+            {
+                Timer_TextBlock.Text = (_imageTimer.Interval / 1000).ToString();
+                Timer_TextBlock.Visibility = Visibility.Visible;
+            }
+            else if (displayTime > 0)
+            {
+                Timer_TextBlock.Text = (_imageTimer.Interval / 1000).ToString();
+                Timer_TextBlock.Visibility = Visibility.Visible;
+                _displayIntervalTimerTimer.Interval = displayTime.Value * 1000;
+                _displayIntervalTimerTimer.Elapsed += _displayIntervalTimerTimer_Elapsed;
+                _displayIntervalTimerTimer.Start();
+            }
+            else
+            {
+                Timer_TextBlock.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void _displayIntervalTimerTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            // Le thread du timer n'est pas le même que le thread de l'UI donc on demande à l'UI de faire le travail
+            this.Dispatcher.Invoke(() =>
+            {
+                DisplayTimerInterval(0);
+            });
         }
     }
 }
