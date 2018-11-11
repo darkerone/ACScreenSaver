@@ -52,7 +52,7 @@ namespace ACScreenSaver
             _screenSaverManager = new ScreenSaverManager();
 
             _imageTimer = new System.Timers.Timer();
-            _imageTimer.Interval = _screenSaverManager.ConfigurationModel.IntervalTime;
+            _imageTimer.Interval = _screenSaverManager.Configuration.IntervalTime;
             _imageTimer.Elapsed += _timer_Elapsed;
 
             _displayIntervalTimerTimer = new System.Timers.Timer();
@@ -109,13 +109,13 @@ namespace ACScreenSaver
                     case Key.Up:
                         _imageTimer.Stop();
                         TemporarilyIncreaseTimer();
-                        DisplayTimerInterval(_screenSaverManager.ConfigurationModel.DisplayIntervalTimeTime);
+                        DisplayTimerInterval(_screenSaverManager.Configuration.DisplayIntervalTimeTime);
                         _imageTimer.Start();
                         break;
                     case Key.Down:
                         _imageTimer.Stop();
                         TemporarilyDecreaseTimer();
-                        DisplayTimerInterval(_screenSaverManager.ConfigurationModel.DisplayIntervalTimeTime);
+                        DisplayTimerInterval(_screenSaverManager.Configuration.DisplayIntervalTimeTime);
                         _imageTimer.Start();
                         break;
                     default:
@@ -139,7 +139,7 @@ namespace ACScreenSaver
         }
 
         /// <summary>
-        /// Quand le timer est écoulé
+        /// Quand le timer des images est écoulé
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -152,16 +152,40 @@ namespace ACScreenSaver
             });
         }
 
+        /// <summary>
+        /// Au clic sur le bouton "A supprimer"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_AddToDeleted_Click(object sender, RoutedEventArgs e)
         {
             _screenSaverManager.AddCurrentImageToDeleted();
             Button_AddToDeleted.IsEnabled = false;
         }
 
+        /// <summary>
+        /// Au clic sur le bouton "Ne plus afficher"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_AddToNotDisplayed_Click(object sender, RoutedEventArgs e)
         {
             _screenSaverManager.AddCurrentImageToNotDisplayed();
             Button_AddToNotDisplayed.IsEnabled = false;
+        }
+
+        /// <summary>
+        /// Quand le timer d'affichage du timer est écoulé
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void _displayIntervalTimerTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            // Le thread du timer n'est pas le même que le thread de l'UI donc on demande à l'UI de faire le travail
+            this.Dispatcher.Invoke(() =>
+            {
+                DisplayTimerInterval(0);
+            });
         }
 
         #endregion
@@ -235,7 +259,7 @@ namespace ACScreenSaver
             if (_isIntervalTimerModified)
             {
                 // On lui redonne sa valeur initiale
-                _imageTimer.Interval = _screenSaverManager.ConfigurationModel.IntervalTime;
+                _imageTimer.Interval = _screenSaverManager.Configuration.IntervalTime;
                 DisplayTimerInterval(0);
             }
             _screenSaverManager.SetCurrentImageIndex(imageFileIndex);
@@ -288,7 +312,7 @@ namespace ACScreenSaver
         /// </summary>
         private void TemporarilyIncreaseTimer()
         {
-            _imageTimer.Interval = _imageTimer.Interval + _screenSaverManager.ConfigurationModel.IntervalTimeGap;
+            _imageTimer.Interval = _imageTimer.Interval + _screenSaverManager.Configuration.IntervalTimeGap;
             _isIntervalTimerModified = true;
         }
 
@@ -297,7 +321,7 @@ namespace ACScreenSaver
         /// </summary>
         private void TemporarilyDecreaseTimer()
         {
-            int newTimerInterval = (int)_imageTimer.Interval - _screenSaverManager.ConfigurationModel.IntervalTimeGap;
+            int newTimerInterval = (int)_imageTimer.Interval - _screenSaverManager.Configuration.IntervalTimeGap;
             if(newTimerInterval < 1000)
             {
                 newTimerInterval = 1000;
@@ -330,15 +354,6 @@ namespace ACScreenSaver
             {
                 Timer_TextBlock.Visibility = Visibility.Hidden;
             }
-        }
-
-        private void _displayIntervalTimerTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            // Le thread du timer n'est pas le même que le thread de l'UI donc on demande à l'UI de faire le travail
-            this.Dispatcher.Invoke(() =>
-            {
-                DisplayTimerInterval(0);
-            });
         }
     }
 }

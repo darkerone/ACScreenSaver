@@ -19,6 +19,7 @@ namespace ACScreenSaver
             IsRandom = true;
             IntervalTimeGap = 2;
             DisplayIntervalTimeTime = 2;
+            NumberOfSuccessiveSameFolderFiles = 1;
         }
 
         /// <summary>
@@ -41,6 +42,7 @@ namespace ACScreenSaver
                 IsRandom = configurationModelTmp.IsRandom;
                 IntervalTimeGap = configurationModelTmp.IntervalTimeGap;
                 DisplayIntervalTimeTime = configurationModelTmp.DisplayIntervalTimeTime;
+                NumberOfSuccessiveSameFolderFiles = configurationModelTmp.NumberOfSuccessiveSameFolderFiles;
             }
         }
 
@@ -68,5 +70,10 @@ namespace ACScreenSaver
         /// Définit le temps que le timer restera affiché
         /// </summary>
         public int DisplayIntervalTimeTime { get; set; }
+
+        /// <summary>
+        /// Définit le nombre de fichiers successifs du même dossier qui seront affichés en aléatoire
+        /// </summary>
+        public int NumberOfSuccessiveSameFolderFiles { get; set; }
     }
 }

@@ -59,6 +59,8 @@ namespace ACScreenSaver
             _configurationModel.ImagesDirectoryPath = this.ImagesDirectoryPath_TextBlock.Text;
             _configurationModel.IntervalTime = this.IntervalTime_IntegerUpDown.Value.Value * 1000;
             _configurationModel.IsRandom = this.IsRandom_CheckBox.IsChecked.Value;
+            _configurationModel.IntervalTimeGap = this.IntervalTimeGap_IntegerUpDown.Value.Value * 1000;
+            _configurationModel.DisplayIntervalTimeTime= this.DisplayIntervalTimeTime_IntegerUpDown.Value.Value * 1000;
 
             var jsonSerializerSettings = new JsonSerializerSettings()
             {

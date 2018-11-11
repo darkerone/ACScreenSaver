@@ -96,6 +96,8 @@
     <Compile Include="ConfigurationWindow.xaml.cs">
       <DependentUpon>ConfigurationWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FileManager.cs" />
+    <Compile Include="FileModel.cs" />
     <Compile Include="ScreenSaverManager.cs" />
     <Compile Include="PreviewWindow.xaml.cs">
       <DependentUpon>PreviewWindow.xaml</DependentUpon>

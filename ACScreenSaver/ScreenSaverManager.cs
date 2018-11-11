@@ -14,44 +14,37 @@ namespace ACScreenSaver
         private string _notDisplayedImagesFilePath = @"ACSS_NotDisplayed.acss";
         private string _historicFilePath = @"ACSS_Historic.acss";
 
-        public ConfigurationModel ConfigurationModel { get; set; }
+        private FileManager _fileManager;
 
-        private List<string> _imagesFilePathList = new List<string>();
+        public ConfigurationModel Configuration { get; set; }
+
+        /// <summary>
+        /// Liste des images à afficher
+        /// </summary>
+        private string[] _imagesFilePathList = new string[] { };
+
+        /// <summary>
+        /// Index de l'image courante
+        /// </summary>
         private int _currentImageIndex = 0;
 
+        /// <summary>
+        /// Liste des images à ne pas afficher
+        /// </summary>
         private List<string> _notDisplayedImagesPathList = new List<string>();
 
         public ScreenSaverManager()
         {
-            ConfigurationModel = new ConfigurationModel();
-            ConfigurationModel.RestoreConfiguration();
+            Configuration = new ConfigurationModel();
+            Configuration.RestoreConfiguration();
             RestoreNotDisplayedImageList();
+
+            _fileManager = new FileManager();
+
             InitImagesList();
         }
 
-        /// <summary>
-        /// Restaure la liste des images qui ne seront pas affichées
-        /// </summary>
-        private void RestoreNotDisplayedImageList()
-        {
-            _notDisplayedImagesPathList.Clear();
-            if (File.Exists(_notDisplayedImagesFilePath))
-            {
-                string[] lines = System.IO.File.ReadAllLines(_notDisplayedImagesFilePath);
-                foreach (string line in lines)
-                {
-                    // Ex : DD/MM/AAAA hh:mm:ss - C:\Path\To\Image.jpg
-                    // On retire la date
-                    string[] splittedLine = line.Split('-');
-                    splittedLine = splittedLine.Skip(1).ToArray();
-
-                    // On reconstitue le chemin de l'image
-                    string imagePath = string.Join("-", splittedLine);
-
-                    _notDisplayedImagesPathList.Add(imagePath);
-                }
-            }
-        }
+        #region Public methods
 
         /// <summary>
         /// Renvoie l'index de l'image courante
@@ -81,7 +74,7 @@ namespace ACScreenSaver
         /// <returns></returns>
         public int GetLastImageIndex()
         {
-            return _imagesFilePathList.Count - 1;
+            return _imagesFilePathList.Length - 1;
         }
 
         /// <summary>
@@ -102,17 +95,6 @@ namespace ACScreenSaver
         {
             _currentImageIndex = index;
             AddCurrentImageToHistoric();
-        }
-
-        /// <summary>
-        /// Initialise la liste des images à afficher
-        /// </summary>
-        public void InitImagesList()
-        {
-            DirectoryInfo d = new DirectoryInfo(ConfigurationModel.ImagesDirectoryPath);
-            string[] files = System.IO.Directory.GetFiles(ConfigurationModel.ImagesDirectoryPath, "*.jpg", SearchOption.TopDirectoryOnly);
-            _imagesFilePathList.Clear();
-            _imagesFilePathList.AddRange(files);
         }
 
         /// <summary>
@@ -137,14 +119,10 @@ namespace ACScreenSaver
         }
 
         /// <summary>
-        /// Renvoie l'heure et la date actuelle au format string
+        /// Définit si l'image a le droit d'être affichée
         /// </summary>
+        /// <param name="index"></param>
         /// <returns></returns>
-        private string GetCurrentTimeString()
-        {
-            return DateTime.Now.ToString();
-        }
-
         public bool CanDisplayImageOfIndex(int index)
         {
             bool isInList = false;
@@ -168,5 +146,63 @@ namespace ACScreenSaver
             filesPathToAdd.Add(GetCurrentTimeString() + " - " + GetCurrentImagePath());
             System.IO.File.AppendAllLines(_historicFilePath, filesPathToAdd);
         }
+
+        #endregion
+
+        #region Private methods
+
+        /// <summary>
+        /// Restaure la liste des images qui ne seront pas affichées
+        /// </summary>
+        private void RestoreNotDisplayedImageList()
+        {
+            _notDisplayedImagesPathList.Clear();
+            if (File.Exists(_notDisplayedImagesFilePath))
+            {
+                string[] lines = System.IO.File.ReadAllLines(_notDisplayedImagesFilePath);
+                foreach (string line in lines)
+                {
+                    // Ex : DD/MM/AAAA hh:mm:ss - C:\Path\To\Image.jpg
+                    // On retire la date
+                    string[] splittedLine = line.Split('-');
+                    splittedLine = splittedLine.Skip(1).ToArray();
+
+                    // On reconstitue le chemin de l'image
+                    string imagePath = string.Join("-", splittedLine);
+
+                    _notDisplayedImagesPathList.Add(imagePath);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Renvoie l'heure et la date actuelle au format string
+        /// </summary>
+        /// <returns></returns>
+        private string GetCurrentTimeString()
+        {
+            return DateTime.Now.ToString();
+        }
+
+        /// <summary>
+        /// Initialise la liste des images à afficher
+        /// </summary>
+        private void InitImagesList()
+        {
+            //DirectoryInfo d = new DirectoryInfo(Configuration.ImagesDirectoryPath);
+            //string[] files = System.IO.Directory.GetFiles(Configuration.ImagesDirectoryPath, "*.jpg", SearchOption.TopDirectoryOnly);
+            //Array.Clear(_imagesFilePathList, 0, _imagesFilePathList.Length);
+            //_imagesFilePathList = _imagesFilePathList.Concat(files).ToArray();
+            if (Configuration.IsRandom)
+            {
+                _imagesFilePathList = _fileManager.GenerateRandomSameFolderFilePathList(Configuration.ImagesDirectoryPath, Configuration.NumberOfSuccessiveSameFolderFiles);
+            }
+            else
+            {
+                _imagesFilePathList = Directory.GetFiles(Configuration.ImagesDirectoryPath, "*.jpg", SearchOption.AllDirectories);
+            }
+        }
+
+        #endregion
     }
 }

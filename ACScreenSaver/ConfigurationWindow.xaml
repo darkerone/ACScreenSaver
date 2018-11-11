@@ -6,7 +6,7 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:ACScreenSaver"
         mc:Ignorable="d"
-        Title="Paramètres de l'écran de veille" Height="220" Width="500">
+        Title="Paramètres de l'écran de veille" Height="265" Width="555">
     <DockPanel Margin="10">
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="Enregistrer" Click="Button_Valider_Click" Margin="5,0" Width="70"></Button>
@@ -20,33 +20,47 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="3*" />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Utiliser les images de" Margin="0,5"></TextBlock>
+            <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Utiliser les images de :" Margin="0,5"></TextBlock>
 
-            <TextBlock x:Name="ImagesDirectoryPath_TextBlock" Grid.Row="1" Grid.Column="0" Text="Images" Margin="0,5"></TextBlock>
+            <TextBlock x:Name="ImagesDirectoryPath_TextBlock" Grid.Row="1" Grid.Column="0" Text="C:\Images" Margin="10,5,0,5"></TextBlock>
             <Button Grid.Row="1" Grid.Column="1" Content="Parcourir" Click="Button_Parcourir_Click" Margin="5,0"></Button>
 
             <Line Grid.Row="2" Grid.ColumnSpan="2" X1="0" Y1="0" X2="1"  Y2="0" 
               Stroke="DimGray" StrokeThickness="1" Stretch="Uniform" Margin="0,5"></Line>
             
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="Faire défiler toutes les (s)" Margin="0,5"></TextBlock>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Faire défiler toutes les" Margin="0,5"></TextBlock>
             <DockPanel Grid.Row="3" Grid.Column="1" VerticalAlignment="Center">
                 <TextBlock DockPanel.Dock="Right" Text="secondes" Margin="5,0"></TextBlock>
                 <xctk:IntegerUpDown x:Name="IntervalTime_IntegerUpDown"  Value="0" />
             </DockPanel>
 
-            <Line Grid.Row="4" Grid.ColumnSpan="2" X1="0" Y1="0" X2="1"  Y2="0" 
-              Stroke="DimGray" StrokeThickness="1" Stretch="Uniform" Margin="0,5"></Line>
+            <!--<Line Grid.Row="4" Grid.ColumnSpan="2" X1="0" Y1="0" X2="1"  Y2="0" 
+              Stroke="DimGray" StrokeThickness="1" Stretch="Uniform" Margin="0,5"></Line>-->
 
             <TextBlock Grid.Row="5" Grid.Column="0" Text="Lecture aléatoire" Margin="0,5"></TextBlock>
-            <StackPanel Grid.Row="5" Grid.Column="1" HorizontalAlignment="Center">
+            <StackPanel Grid.Row="5" Grid.Column="1" HorizontalAlignment="Center" Margin="0,5">
                 <CheckBox x:Name="IsRandom_CheckBox" IsChecked="False"></CheckBox>
             </StackPanel>
+
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="Les flèches haut et bas augmentent le timer de l'image courante de" Margin="0,5"></TextBlock>
+            <DockPanel Grid.Row="6" Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock DockPanel.Dock="Right" Text="secondes" Margin="5,0"></TextBlock>
+                <xctk:IntegerUpDown x:Name="IntervalTimeGap_IntegerUpDown"  Value="0" />
+            </DockPanel>
+
+            <TextBlock Grid.Row="7" Grid.Column="0" Text="Masquer le timer au bout de" Margin="0,5"></TextBlock>
+            <DockPanel Grid.Row="7" Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock DockPanel.Dock="Right" Text="secondes" Margin="5,0"></TextBlock>
+                <xctk:IntegerUpDown x:Name="DisplayIntervalTimeTime_IntegerUpDown"  Value="0" />
+            </DockPanel>
         </Grid>
     </DockPanel>
 </Window>
