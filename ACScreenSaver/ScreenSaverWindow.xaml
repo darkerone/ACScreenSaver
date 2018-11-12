@@ -26,7 +26,7 @@
                 <Button Content="Réafficher l'écran de veille" Click="Button_FullDisplay_Click" Margin="5,0"></Button>
             </StackPanel>
             <DockPanel>
-                <Grid DockPanel.Dock="Bottom">
+                <Grid DockPanel.Dock="Bottom" Margin="10,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
@@ -37,13 +37,13 @@
                         <ColumnDefinition Width="2*" />
                     </Grid.ColumnDefinitions>
 
-
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Chemin de l'image : "></TextBlock>
-                    <TextBlock Grid.Row="1" Grid.Column="1" x:Name="ImageDirectoryName_TextBlock"></TextBlock>
-                    <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal">
+                    <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,5" HorizontalAlignment="Right">
                         <Button x:Name="Button_AddToDeleted" Content="A supprimer" Margin="5,0" Click="Button_AddToDeleted_Click"></Button>
                         <Button x:Name="Button_AddToNotDisplayed" Content="Ne plus afficher" Margin="5,0" Click="Button_AddToNotDisplayed_Click"></Button>
                     </StackPanel>
+                    
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Chemin de l'image : " Margin="0,5"></TextBlock>
+                    <TextBlock Grid.Row="2" Grid.Column="1" x:Name="ImageDirectoryName_TextBlock" Margin="0,5"></TextBlock>
                     
                 </Grid>
                 <Image x:Name="ScreenSaverInformation_Image" MinHeight="100"></Image>

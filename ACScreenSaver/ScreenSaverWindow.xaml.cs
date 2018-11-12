@@ -52,7 +52,7 @@ namespace ACScreenSaver
             _screenSaverManager = new ScreenSaverManager();
 
             _imageTimer = new System.Timers.Timer();
-            _imageTimer.Interval = _screenSaverManager.Configuration.IntervalTime;
+            _imageTimer.Interval = _screenSaverManager.Configuration.ImageDisplayDuration;
             _imageTimer.Elapsed += _timer_Elapsed;
 
             _displayIntervalTimerTimer = new System.Timers.Timer();
@@ -109,13 +109,13 @@ namespace ACScreenSaver
                     case Key.Up:
                         _imageTimer.Stop();
                         TemporarilyIncreaseTimer();
-                        DisplayTimerInterval(_screenSaverManager.Configuration.DisplayIntervalTimeTime);
+                        DisplayTimerInterval(_screenSaverManager.Configuration.TimerDisplayDuration);
                         _imageTimer.Start();
                         break;
                     case Key.Down:
                         _imageTimer.Stop();
                         TemporarilyDecreaseTimer();
-                        DisplayTimerInterval(_screenSaverManager.Configuration.DisplayIntervalTimeTime);
+                        DisplayTimerInterval(_screenSaverManager.Configuration.TimerDisplayDuration);
                         _imageTimer.Start();
                         break;
                     default:
@@ -259,7 +259,7 @@ namespace ACScreenSaver
             if (_isIntervalTimerModified)
             {
                 // On lui redonne sa valeur initiale
-                _imageTimer.Interval = _screenSaverManager.Configuration.IntervalTime;
+                _imageTimer.Interval = _screenSaverManager.Configuration.ImageDisplayDuration;
                 DisplayTimerInterval(0);
             }
             _screenSaverManager.SetCurrentImageIndex(imageFileIndex);
@@ -312,7 +312,7 @@ namespace ACScreenSaver
         /// </summary>
         private void TemporarilyIncreaseTimer()
         {
-            _imageTimer.Interval = _imageTimer.Interval + _screenSaverManager.Configuration.IntervalTimeGap;
+            _imageTimer.Interval = _imageTimer.Interval + _screenSaverManager.Configuration.TimerDurationGap;
             _isIntervalTimerModified = true;
         }
 
@@ -321,7 +321,7 @@ namespace ACScreenSaver
         /// </summary>
         private void TemporarilyDecreaseTimer()
         {
-            int newTimerInterval = (int)_imageTimer.Interval - _screenSaverManager.Configuration.IntervalTimeGap;
+            int newTimerInterval = (int)_imageTimer.Interval - _screenSaverManager.Configuration.TimerDurationGap;
             if(newTimerInterval < 1000)
             {
                 newTimerInterval = 1000;

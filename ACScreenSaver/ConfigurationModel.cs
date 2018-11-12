@@ -15,10 +15,10 @@ namespace ACScreenSaver
         public ConfigurationModel()
         {
             ImagesDirectoryPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures); ;
-            IntervalTime = 10;
+            ImageDisplayDuration = 10;
             IsRandom = true;
-            IntervalTimeGap = 2;
-            DisplayIntervalTimeTime = 2;
+            TimerDurationGap = 2;
+            TimerDisplayDuration = 2;
             NumberOfSuccessiveSameFolderFiles = 1;
         }
 
@@ -38,12 +38,23 @@ namespace ACScreenSaver
                 ConfigurationModel configurationModelTmp = JsonConvert.DeserializeObject<ConfigurationModel>(json, jsonSerializerSettings);
 
                 ImagesDirectoryPath = configurationModelTmp.ImagesDirectoryPath;
-                IntervalTime = configurationModelTmp.IntervalTime;
+                ImageDisplayDuration = configurationModelTmp.ImageDisplayDuration;
                 IsRandom = configurationModelTmp.IsRandom;
-                IntervalTimeGap = configurationModelTmp.IntervalTimeGap;
-                DisplayIntervalTimeTime = configurationModelTmp.DisplayIntervalTimeTime;
+                TimerDurationGap = configurationModelTmp.TimerDurationGap;
+                TimerDisplayDuration = configurationModelTmp.TimerDisplayDuration;
                 NumberOfSuccessiveSameFolderFiles = configurationModelTmp.NumberOfSuccessiveSameFolderFiles;
             }
+        }
+
+        public void SaveConfiguration()
+        {
+            var jsonSerializerSettings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.All,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            string jsonConfiguration = JsonConvert.SerializeObject(this, jsonSerializerSettings);
+            System.IO.File.WriteAllText(_configurationFilePath, jsonConfiguration);
         }
 
         /// <summary>
@@ -54,7 +65,7 @@ namespace ACScreenSaver
         /// <summary>
         /// Temps d'affichage d'une image (en millisecondes)
         /// </summary>
-        public int IntervalTime { get; set; }
+        public int ImageDisplayDuration { get; set; }
 
         /// <summary>
         /// Définit si les photos seront affichées de manière aléatoire
@@ -64,12 +75,12 @@ namespace ACScreenSaver
         /// <summary>
         /// Définit de combien le timer sera augementé/diminué
         /// </summary>
-        public int IntervalTimeGap { get; set; }
+        public int TimerDurationGap { get; set; }
 
         /// <summary>
         /// Définit le temps que le timer restera affiché
         /// </summary>
-        public int DisplayIntervalTimeTime { get; set; }
+        public int TimerDisplayDuration { get; set; }
 
         /// <summary>
         /// Définit le nombre de fichiers successifs du même dossier qui seront affichés en aléatoire

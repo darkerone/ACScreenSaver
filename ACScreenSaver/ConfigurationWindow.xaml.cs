@@ -22,7 +22,6 @@ namespace ACScreenSaver
     /// </summary>
     public partial class ConfigurationWindow : Window
     {
-        private string _configurationFilePath = @"ACSS_Configuration.acss";
         private ConfigurationModel _configurationModel;
 
         public ConfigurationWindow()
@@ -33,8 +32,11 @@ namespace ACScreenSaver
             _configurationModel.RestoreConfiguration();
 
             this.ImagesDirectoryPath_TextBlock.Text = _configurationModel.ImagesDirectoryPath;
-            this.IntervalTime_IntegerUpDown.Value = _configurationModel.IntervalTime;
+            this.ImageDisplayDuration_IntegerUpDown.Value = _configurationModel.ImageDisplayDuration;
             this.IsRandom_CheckBox.IsChecked = _configurationModel.IsRandom;
+            this.TimerDurationGap_IntegerUpDown.Value = _configurationModel.TimerDurationGap / 1000;
+            this.TimerDisplayDuration_IntegerUpDown.Value = _configurationModel.TimerDisplayDuration / 1000;
+            this.NumberOfSuccessiveSameFolderFiles_IntegerUpDown.Value = _configurationModel.NumberOfSuccessiveSameFolderFiles;
         }
 
         private void Button_Parcourir_Click(object sender, RoutedEventArgs e)
@@ -57,18 +59,13 @@ namespace ACScreenSaver
         private void Button_Valider_Click(object sender, RoutedEventArgs e)
         {
             _configurationModel.ImagesDirectoryPath = this.ImagesDirectoryPath_TextBlock.Text;
-            _configurationModel.IntervalTime = this.IntervalTime_IntegerUpDown.Value.Value * 1000;
+            _configurationModel.ImageDisplayDuration = this.ImageDisplayDuration_IntegerUpDown.Value.Value * 1000;
             _configurationModel.IsRandom = this.IsRandom_CheckBox.IsChecked.Value;
-            _configurationModel.IntervalTimeGap = this.IntervalTimeGap_IntegerUpDown.Value.Value * 1000;
-            _configurationModel.DisplayIntervalTimeTime= this.DisplayIntervalTimeTime_IntegerUpDown.Value.Value * 1000;
+            _configurationModel.TimerDurationGap = this.TimerDurationGap_IntegerUpDown.Value.Value * 1000;
+            _configurationModel.TimerDisplayDuration= this.TimerDisplayDuration_IntegerUpDown.Value.Value * 1000;
+            _configurationModel.NumberOfSuccessiveSameFolderFiles = this.NumberOfSuccessiveSameFolderFiles_IntegerUpDown.Value.Value;
 
-            var jsonSerializerSettings = new JsonSerializerSettings()
-            {
-                TypeNameHandling = TypeNameHandling.All,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
-            string jsonConfiguration = JsonConvert.SerializeObject(_configurationModel, jsonSerializerSettings);
-            System.IO.File.WriteAllText(_configurationFilePath, jsonConfiguration);
+            _configurationModel.SaveConfiguration();
             System.Windows.Application.Current.Shutdown();
         }
     }
