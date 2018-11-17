@@ -12,6 +12,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -229,10 +230,25 @@ namespace ACScreenSaver
         /// <param name="uri"></param>
         private void SetScreenSaverImage(string uri)
         {
+            // TODO : supprimer
+            //uri = @"D:\Moi\Images\Panorama-de-Paris-la-nuit.jpg";
             if(uri != null)
             {
                 Logger.LogDebug("Affichage de l'image : " + uri);
                 ScreenSaver_Image.Source = new BitmapImage(new Uri(uri));
+                Zoom_Border.Reset();
+
+
+                System.Drawing.Image imgDrawing = System.Drawing.Image.FromFile(uri);
+
+                //// Ratios
+                //double imageRatio = (float)imgDrawing.Width / (float)imgDrawing.Height;
+                //double screenRation = SystemParameters.WorkArea.Width / SystemParameters.WorkArea.Height;
+
+                //if (screenRation < imageRatio)
+                //{
+                //    MakeImagePanorama(ScreenSaver_Image, imgDrawing, _screenSaverManager.Configuration.PanoramaDisplayDuration);
+                //}
             }
             else
             {
@@ -401,6 +417,64 @@ namespace ACScreenSaver
         private void SetImageTimerDuration(double duration)
         {
             _imageTimer.Interval = duration < 1000 ? 1000 : duration;
+        }
+
+        /// <summary>
+        /// Réalise un panorama de l'image passée en paramètre
+        /// </summary>
+        /// <param name="imageControl"></param>
+        /// <param name="imgDrawing"></param>
+        /// <param name="duration">Durée du panorama en millisecondes</param>
+        private void MakeImagePanorama(Image imageControl, System.Drawing.Image imgDrawing, int duration)
+        {
+            // Ratios
+            double imageRatio = (float)imgDrawing.Width / (float)imgDrawing.Height;
+
+            // Calcul les dimensions de l'image si sa hauteur est celle de l'écran
+            double imageHeightResized = (float)SystemParameters.WorkArea.Height;
+            double imageWidthResized = (float)SystemParameters.WorkArea.Height * imageRatio;
+
+            // Différence entre la hauteur de l'image et celle de l'écran
+            double heightDifference = Math.Abs((float)imgDrawing.Height - (float)SystemParameters.WorkArea.Height);
+            // Redimensionne l'image pour que sa hauteur soit celle de l'écran
+            IncreaseImageScale(imageControl, heightDifference);
+            //imageControl.SetValue(Image.HeightProperty, imageHeightResized);
+            //imageControl.SetValue(Image.WidthProperty, imageWidthResized);
+
+            // Différence entre la largeur de l'image redimensionnée et celle de l'écran
+            double widthDifference = Math.Abs((float)imageWidthResized - (float)SystemParameters.WorkArea.Width);
+            MoveImageWithOffset(imageControl, widthDifference, 0, duration);
+        }
+
+        /// <summary>
+        /// Déplace l'image de -offset/2 à offset/2
+        /// </summary>
+        /// <param name="image">Image</param>
+        /// <param name="offset">Longueur du déplacement</param>
+        /// <param name="duration">Durée en millisecondes</param>
+        private void MoveImageWithOffset(Image image, double xOffset, double yOffset, int duration)
+        {
+            var xFrom = -xOffset / 2;
+            var xTo = xOffset / 2;
+            var yFrom = -yOffset / 2;
+            var yTo = yOffset / 2;
+
+            TranslateTransform translation = new TranslateTransform();
+            image.RenderTransform = translation;
+            DoubleAnimation xAnimation = new DoubleAnimation(xFrom, xTo, TimeSpan.FromMilliseconds(duration));
+            DoubleAnimation yAnimation = new DoubleAnimation(yFrom, yTo, TimeSpan.FromMilliseconds(duration));
+            translation.BeginAnimation(TranslateTransform.XProperty, xAnimation);
+            translation.BeginAnimation(TranslateTransform.YProperty, yAnimation);
+        }
+
+        /// <summary>
+        /// Agrandit l'image 
+        /// </summary>
+        /// <param name="image">Image</param>
+        /// <param name="scaleOffset">Agrandissement (en pixels)</param>
+        private void IncreaseImageScale(Image image, double scaleOffset)
+        {
+            image.SetValue(MarginProperty, new Thickness(-scaleOffset / 2));
         }
     }
 }

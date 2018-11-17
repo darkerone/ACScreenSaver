@@ -20,6 +20,7 @@ namespace ACScreenSaver
             TimerDurationGap = 2000;
             TimerDisplayDuration = 2000;
             NumberOfSuccessiveSameFolderFiles = 1;
+            PanoramaDisplayDuration = ImageDisplayDuration * 2;
         }
 
         /// <summary>
@@ -78,6 +79,11 @@ namespace ACScreenSaver
         /// Temps d'affichage d'une image (en millisecondes)
         /// </summary>
         public int ImageDisplayDuration { get; set; }
+
+        /// <summary>
+        /// Temps d'affichage d'une panorama (en millisecondes)
+        /// </summary>
+        public int PanoramaDisplayDuration { get; set; }
 
         /// <summary>
         /// Définit si les photos seront affichées de manière aléatoire
