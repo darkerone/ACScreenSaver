@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace ACScreenSaver.Utils
 {
@@ -64,15 +65,79 @@ namespace ACScreenSaver.Utils
         {
             if (child != null)
             {
-                // reset zoom
-                var st = GetScaleTransform(child);
-                st.ScaleX = 1.0;
-                st.ScaleY = 1.0;
+                Initialize(child);
+            }
+        }
 
-                // reset pan
+        public void Rescale(double scaleRatio)
+        {
+            if (child != null)
+            {
+                // Zoom
+                var st = GetScaleTransform(child);
+                st.ScaleX = scaleRatio;
+                st.ScaleY = scaleRatio;
+            }
+        }
+
+        public void RunTranslation(double xFrom, double xTo, double yFrom, double yTo, int duration)
+        {
+            if (child != null)
+            {
+                DoubleAnimation xAnimation = new DoubleAnimation(xFrom, xTo, TimeSpan.FromMilliseconds(duration));
+                DoubleAnimation yAnimation = new DoubleAnimation(yFrom, yTo, TimeSpan.FromMilliseconds(duration));
+
+                // Lance le panorama
                 var tt = GetTranslateTransform(child);
-                tt.X = 0.0;
-                tt.Y = 0.0;
+                tt.BeginAnimation(TranslateTransform.XProperty, xAnimation);
+                tt.BeginAnimation(TranslateTransform.YProperty, yAnimation);
+            }
+        }
+
+        /// <summary>
+        /// Réalise un panorama de l'image passée en paramètre
+        /// </summary>
+        /// <param name="imageControl"></param>
+        /// <param name="imgDrawing"></param>
+        /// <param name="duration">Durée du panorama en millisecondes</param>
+        public void MakeImagePanorama(System.Drawing.Image imgDrawing, int duration, bool fromLeftToRight = true)
+        {
+            // Ratios
+            double imageRatio = (float)imgDrawing.Width / (float)imgDrawing.Height;
+
+            // Calcul les dimensions de l'image si sa hauteur est celle de l'écran
+            double imageHeightResizedFromHeight = (float)SystemParameters.WorkArea.Height;
+            double imageWidthResizedFromHeight = (float)SystemParameters.WorkArea.Height * imageRatio;
+
+            // Calcul les dimensions de l'image si sa largeur est celle de l'écran
+            double imageHeightResizedFromWidth = (float)SystemParameters.WorkArea.Width / imageRatio;
+            double imageWidthResizedFromWidth = (float)SystemParameters.WorkArea.Width;
+
+            // Redimensionne l'image pour que sa hauteur soit celle de l'écran
+            Rescale((float)SystemParameters.WorkArea.Height / imageHeightResizedFromWidth);
+
+            // Différence entre la hauteur de l'image et celle de l'écran après redimensionnement à partir de la largeur
+            double heightDifferenceResizedFromWidth = (float)SystemParameters.WorkArea.Height - imageHeightResizedFromWidth;
+            // Différence entre la largeur de l'image redimensionnée et celle de l'écran
+            double widthDifferenceResizedFromHeight = (float)imageWidthResizedFromHeight - (float)SystemParameters.WorkArea.Width;
+
+            if (fromLeftToRight)
+            {
+                RunTranslation(
+                    0,
+                    -widthDifferenceResizedFromHeight,
+                    -heightDifferenceResizedFromWidth / 2,
+                    -heightDifferenceResizedFromWidth / 2,
+                    5000);
+            }
+            else
+            {
+                RunTranslation(
+                    -widthDifferenceResizedFromHeight,
+                    0,
+                    -heightDifferenceResizedFromWidth / 2,
+                    -heightDifferenceResizedFromWidth / 2,
+                    5000);
             }
         }
 
