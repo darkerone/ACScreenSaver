@@ -6,11 +6,11 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:ACScreenSaver"
         mc:Ignorable="d"
-        Title="Paramètres de l'écran de veille" Height="289.442" Width="555">
+        Title="Paramètres de l'écran de veille" Height="320" Width="555">
     <DockPanel Margin="10">
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Enregistrer" Click="Button_Valider_Click" Margin="5,0" Width="70"></Button>
-            <Button Content="Annuler" Click="Button_Annuler_Click" Margin="5,0" Width="70"></Button>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button Content="Enregistrer" Click="Button_Valider_Click" Margin="5,0" Width="100"></Button>
+            <Button Content="Annuler" Click="Button_Annuler_Click" Margin="5,0" Width="100"></Button>
         </StackPanel>
         <Grid>
             <Grid.RowDefinitions>
@@ -35,8 +35,8 @@
             <TextBlock x:Name="ImagesDirectoryPath_TextBlock" Grid.Row="1" Grid.Column="0" Text="C:\Images" Margin="10,5,0,5"></TextBlock>
             <Button Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Content="Parcourir" Click="Button_Parcourir_Click" Margin="5,0"></Button>
 
-            <Line Grid.Row="2" Grid.ColumnSpan="2" X1="0" Y1="0" X2="1"  Y2="0" 
-              Stroke="DimGray" StrokeThickness="1" Stretch="Uniform" Margin="0,5"></Line>
+            <Line Grid.Row="2" Grid.ColumnSpan="3" X1="0" Y1="0" X2="1"  Y2="0" 
+              Stroke="DimGray" StrokeThickness="1" Stretch="Uniform" Margin="0,10"></Line>
             
             <TextBlock Grid.Row="3" Grid.Column="0" Text="Faire défiler toutes les" Margin="0,5"></TextBlock>
             <xctk:IntegerUpDown Grid.Row="3" Grid.Column="1" x:Name="ImageDisplayDuration_IntegerUpDown"  Value="0" />

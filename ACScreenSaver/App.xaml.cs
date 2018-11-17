@@ -15,11 +15,20 @@ namespace ACScreenSaver
     {
         private void ApplicationStartup(object sender, StartupEventArgs e)
         {
+            try
+            {
+                System.IO.Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\ACScreenSaver");
+            }
+            catch(Exception ex)
+            {
+                Logger.LogError(ex.Message);
+            }
             // Preview mode--display in little window in Screen Saver dialog
             // (Not invoked with Preview button, which runs Screen Saver in
             // normal /s mode).
             if (e.Args[0].ToLower().StartsWith("/p"))
             {
+                Logger.LogDebug("Mode preview");
                 //PreviewWindow previewWindow = new PreviewWindow();
                 //previewWindow.Show();
             }
@@ -27,12 +36,14 @@ namespace ACScreenSaver
             // or was launched from Preview button
             else if (e.Args[0].ToLower().StartsWith("/s"))
             {
+                Logger.LogDebug("Mode screen saver");
                 ScreenSaverWindow screensaver = new ScreenSaverWindow();
                 screensaver.Show();
             }
             // Config mode, launched from Settings button in screen saver dialog
             else if (e.Args[0].ToLower().StartsWith("/c"))
             {
+                Logger.LogDebug("Mode configuration");
                 ConfigurationWindow configurationWindow = new ConfigurationWindow();
                 configurationWindow.Show();
             }
@@ -40,6 +51,7 @@ namespace ACScreenSaver
             // immediately (because we don't have a GUI).
             else
             {
+                Logger.LogError("Aucun argument spécifié");
                 ScreenSaverWindow screensaver = new ScreenSaverWindow();
                 screensaver.Show();
             }

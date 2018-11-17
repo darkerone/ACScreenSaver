@@ -23,16 +23,19 @@ namespace ACScreenSaver
     public partial class ConfigurationWindow : Window
     {
         private ConfigurationModel _configurationModel;
+        private bool _isDialogWindow = false;
 
-        public ConfigurationWindow()
+        public ConfigurationWindow(bool isDialogWindow = false)
         {
+            _isDialogWindow = isDialogWindow;
+
             InitializeComponent();
 
             _configurationModel = new ConfigurationModel();
             _configurationModel.RestoreConfiguration();
 
             this.ImagesDirectoryPath_TextBlock.Text = _configurationModel.ImagesDirectoryPath;
-            this.ImageDisplayDuration_IntegerUpDown.Value = _configurationModel.ImageDisplayDuration;
+            this.ImageDisplayDuration_IntegerUpDown.Value = _configurationModel.ImageDisplayDuration / 1000;
             this.IsRandom_CheckBox.IsChecked = _configurationModel.IsRandom;
             this.TimerDurationGap_IntegerUpDown.Value = _configurationModel.TimerDurationGap / 1000;
             this.TimerDisplayDuration_IntegerUpDown.Value = _configurationModel.TimerDisplayDuration / 1000;
@@ -53,7 +56,14 @@ namespace ACScreenSaver
 
         private void Button_Annuler_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Application.Current.Shutdown();
+            if (_isDialogWindow)
+            {
+                this.Close();
+            }
+            else
+            {
+                System.Windows.Application.Current.Shutdown();
+            }
         }
 
         private void Button_Valider_Click(object sender, RoutedEventArgs e)
@@ -66,7 +76,15 @@ namespace ACScreenSaver
             _configurationModel.NumberOfSuccessiveSameFolderFiles = this.NumberOfSuccessiveSameFolderFiles_IntegerUpDown.Value.Value;
 
             _configurationModel.SaveConfiguration();
-            System.Windows.Application.Current.Shutdown();
+
+            if (_isDialogWindow)
+            {
+                this.Close();
+            }
+            else
+            {
+                System.Windows.Application.Current.Shutdown();
+            }
         }
     }
 }

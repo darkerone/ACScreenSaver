@@ -1,0 +1,53 @@
+﻿<Window x:Class="ACScreenSaver.LegendeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ACScreenSaver"
+        mc:Ignorable="d"
+        Title="LegendeWindow" Height="300" Width="612.439">
+    <Window.Resources>
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Padding" Value="10,5"/>
+        </Style>
+    </Window.Resources>
+    <DockPanel Margin="10">
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Ok" Width="100" Click="Button_Ok_Click"></Button>
+        </StackPanel>
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Barre d'espace" FontWeight="Bold"></TextBlock>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="Mettre en pause / Reprendre"></TextBlock>
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Flèche haut" FontWeight="Bold"></TextBlock>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="Augmenter le temps d'affichage pour la photo courante"></TextBlock>
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Flèche bas" FontWeight="Bold"></TextBlock>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="Diminuer le temps d'affichage pour la photo courante"></TextBlock>
+
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Flèche gauche" FontWeight="Bold"></TextBlock>
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="Photo précédente"></TextBlock>
+
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Flèche droite" FontWeight="Bold"></TextBlock>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="Photo suivante"></TextBlock>
+
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="Autres touches" FontWeight="Bold"></TextBlock>
+            <TextBlock Grid.Row="5" Grid.Column="1" Text="Quitter le mode Plein écran"></TextBlock>
+        </Grid>
+    </DockPanel>
+    
+</Window>

@@ -10,15 +10,15 @@ namespace ACScreenSaver
 {
     public class ConfigurationModel
     {
-        private string _configurationFilePath = @"ACSS_Configuration.acss";
+        private string _configurationFilePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\ACScreenSaver\ACSS_Configuration.acss";
 
         public ConfigurationModel()
         {
             ImagesDirectoryPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures); ;
-            ImageDisplayDuration = 10;
+            ImageDisplayDuration = 5000;
             IsRandom = true;
-            TimerDurationGap = 2;
-            TimerDisplayDuration = 2;
+            TimerDurationGap = 2000;
+            TimerDisplayDuration = 2000;
             NumberOfSuccessiveSameFolderFiles = 1;
         }
 
@@ -29,6 +29,7 @@ namespace ACScreenSaver
         {
             if (File.Exists(_configurationFilePath))
             {
+                Logger.LogDebug("Restauration de la configuration");
                 string json = System.IO.File.ReadAllText(_configurationFilePath);
                 var jsonSerializerSettings = new JsonSerializerSettings()
                 {
@@ -44,6 +45,10 @@ namespace ACScreenSaver
                 TimerDisplayDuration = configurationModelTmp.TimerDisplayDuration;
                 NumberOfSuccessiveSameFolderFiles = configurationModelTmp.NumberOfSuccessiveSameFolderFiles;
             }
+            else
+            {
+                Logger.LogDebug("Aucun fichier de configuration trouvé");
+            }
         }
 
         public void SaveConfiguration()
@@ -54,7 +59,14 @@ namespace ACScreenSaver
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             };
             string jsonConfiguration = JsonConvert.SerializeObject(this, jsonSerializerSettings);
-            System.IO.File.WriteAllText(_configurationFilePath, jsonConfiguration);
+            try
+            {
+                System.IO.File.WriteAllText(_configurationFilePath, jsonConfiguration);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+            }
         }
 
         /// <summary>

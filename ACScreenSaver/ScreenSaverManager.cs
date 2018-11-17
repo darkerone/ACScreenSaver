@@ -10,9 +10,9 @@ namespace ACScreenSaver
 {
     public class ScreenSaverManager
     {
-        private string _deletedImagesFilePath = @"ACSS_Deleted.acss";
-        private string _notDisplayedImagesFilePath = @"ACSS_NotDisplayed.acss";
-        private string _historicFilePath = @"ACSS_Historic.acss";
+        private string _deletedImagesFilePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\ACScreenSaver\ACSS_Deleted.acss";
+        private string _notDisplayedImagesFilePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\ACScreenSaver\ACSS_NotDisplayed.acss";
+        private string _historicFilePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\ACScreenSaver\ACSS_Historic.acss";
 
         private FileManager _fileManager;
 
@@ -102,9 +102,16 @@ namespace ACScreenSaver
         /// </summary>
         public void AddCurrentImageToDeleted()
         {
-            List<string> filesPathToAdd = new List<string>();
-            filesPathToAdd.Add(GetCurrentTimeString() + " - " + GetCurrentImagePath());
-            System.IO.File.AppendAllLines(_deletedImagesFilePath, filesPathToAdd);
+            try
+            {
+                List<string> filesPathToAdd = new List<string>();
+                filesPathToAdd.Add(GetCurrentTimeString() + " - " + GetCurrentImagePath());
+                System.IO.File.AppendAllLines(_deletedImagesFilePath, filesPathToAdd);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+            }
         }
 
         /// <summary>
@@ -112,10 +119,17 @@ namespace ACScreenSaver
         /// </summary>
         public void AddCurrentImageToNotDisplayed()
         {
-            List<string> filesPathToAdd = new List<string>();
-            filesPathToAdd.Add(GetCurrentTimeString() + " - " + GetCurrentImagePath());
-            System.IO.File.AppendAllLines(_notDisplayedImagesFilePath, filesPathToAdd);
-            RestoreNotDisplayedImageList();
+            try
+            {
+                List<string> filesPathToAdd = new List<string>();
+                filesPathToAdd.Add(GetCurrentTimeString() + " - " + GetCurrentImagePath());
+                System.IO.File.AppendAllLines(_notDisplayedImagesFilePath, filesPathToAdd);
+                RestoreNotDisplayedImageList();
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+            }
         }
 
         /// <summary>
@@ -142,9 +156,16 @@ namespace ACScreenSaver
         /// </summary>
         public void AddCurrentImageToHistoric()
         {
-            List<string> filesPathToAdd = new List<string>();
-            filesPathToAdd.Add(GetCurrentTimeString() + " - " + GetCurrentImagePath());
-            System.IO.File.AppendAllLines(_historicFilePath, filesPathToAdd);
+            try
+            {
+                List<string> filesPathToAdd = new List<string>();
+                filesPathToAdd.Add(GetCurrentTimeString() + " - " + GetCurrentImagePath());
+                System.IO.File.AppendAllLines(_historicFilePath, filesPathToAdd);
+            }
+            catch(Exception e)
+            {
+                Logger.LogError(e.Message);
+            }
         }
 
         #endregion
@@ -159,6 +180,7 @@ namespace ACScreenSaver
             _notDisplayedImagesPathList.Clear();
             if (File.Exists(_notDisplayedImagesFilePath))
             {
+                Logger.LogDebug("Restauration des chemins des fichiers à ne pas afficher");
                 string[] lines = System.IO.File.ReadAllLines(_notDisplayedImagesFilePath);
                 foreach (string line in lines)
                 {
@@ -172,6 +194,10 @@ namespace ACScreenSaver
 
                     _notDisplayedImagesPathList.Add(imagePath);
                 }
+            }
+            else
+            {
+                Logger.LogDebug("Aucun fichier trouvé pour la restauration des chemins des fichiers à ne pas afficher");
             }
         }
 
@@ -189,16 +215,15 @@ namespace ACScreenSaver
         /// </summary>
         private void InitImagesList()
         {
-            //DirectoryInfo d = new DirectoryInfo(Configuration.ImagesDirectoryPath);
-            //string[] files = System.IO.Directory.GetFiles(Configuration.ImagesDirectoryPath, "*.jpg", SearchOption.TopDirectoryOnly);
-            //Array.Clear(_imagesFilePathList, 0, _imagesFilePathList.Length);
-            //_imagesFilePathList = _imagesFilePathList.Concat(files).ToArray();
             if (Configuration.IsRandom)
             {
+                Logger.LogDebug("Mode de visualisation aléatoire");
                 _imagesFilePathList = _fileManager.GenerateRandomSameFolderFilePathList(Configuration.ImagesDirectoryPath, Configuration.NumberOfSuccessiveSameFolderFiles);
             }
             else
             {
+                Logger.LogDebug("Mode de visualisation non aléatoire");
+                Logger.LogDebug("Récupération de la liste des fichiers");
                 _imagesFilePathList = Directory.GetFiles(Configuration.ImagesDirectoryPath, "*.jpg", SearchOption.AllDirectories);
             }
         }

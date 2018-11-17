@@ -53,6 +53,7 @@ namespace ACScreenSaver
         /// <returns></returns>
         public string[] GenerateRandomSameFolderFilePathList(string directoryPath, int numberOfSameFolderFiles)
         {
+            Logger.LogDebug("Génération de la liste aléatoire des fichiers");
             if (numberOfSameFolderFiles < 1)
             {
                 numberOfSameFolderFiles = 1;
