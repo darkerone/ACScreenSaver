@@ -168,6 +168,8 @@ namespace ACScreenSaver
                 double screenRation = SystemParameters.WorkArea.Width / SystemParameters.WorkArea.Height;
                 if (screenRation < imageRatio)
                 {
+                    SetImageTimerDuration(_screenSaverManager.Configuration.PanoramaDisplayDuration);
+                    _isTimerDurationModified = true;
                     Zoom_Border.MakeImagePanorama(imgDrawing, _screenSaverManager.Configuration.PanoramaDisplayDuration);
                 }
 

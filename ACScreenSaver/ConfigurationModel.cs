@@ -20,7 +20,7 @@ namespace ACScreenSaver
             TimerDurationGap = 2000;
             TimerDisplayDuration = 2000;
             NumberOfSuccessiveSameFolderFiles = 1;
-            PanoramaDisplayDuration = ImageDisplayDuration * 2;
+            PanoramaDisplayDuration = ImageDisplayDuration * 3;
         }
 
         /// <summary>

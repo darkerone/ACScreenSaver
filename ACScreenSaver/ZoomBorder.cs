@@ -128,7 +128,7 @@ namespace ACScreenSaver.Utils
                     -widthDifferenceResizedFromHeight,
                     -heightDifferenceResizedFromWidth / 2,
                     -heightDifferenceResizedFromWidth / 2,
-                    5000);
+                    duration);
             }
             else
             {
@@ -137,7 +137,7 @@ namespace ACScreenSaver.Utils
                     0,
                     -heightDifferenceResizedFromWidth / 2,
                     -heightDifferenceResizedFromWidth / 2,
-                    5000);
+                    duration);
             }
         }
 
