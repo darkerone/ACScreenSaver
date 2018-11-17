@@ -6,7 +6,7 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:ACScreenSaver"
         mc:Ignorable="d"
-        Title="Paramètres de l'écran de veille" Height="320" Width="555">
+        Title="Paramètres de l'écran de veille" Height="400" Width="750">
     <DockPanel Margin="10">
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
             <Button Content="Enregistrer" Click="Button_Valider_Click" Margin="5,0" Width="100"></Button>
@@ -14,6 +14,7 @@
         </StackPanel>
         <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
@@ -37,7 +38,7 @@
 
             <Line Grid.Row="2" Grid.ColumnSpan="3" X1="0" Y1="0" X2="1"  Y2="0" 
               Stroke="DimGray" StrokeThickness="1" Stretch="Uniform" Margin="0,10"></Line>
-            
+
             <TextBlock Grid.Row="3" Grid.Column="0" Text="Faire défiler toutes les" Margin="0,5"></TextBlock>
             <xctk:IntegerUpDown Grid.Row="3" Grid.Column="1" x:Name="ImageDisplayDuration_IntegerUpDown"  Value="0" />
             <TextBlock Grid.Row="3" Grid.Column="2" DockPanel.Dock="Right" Text="secondes" Margin="5,0"></TextBlock>
@@ -53,9 +54,13 @@
             <xctk:IntegerUpDown Grid.Row="7" Grid.Column="1" x:Name="TimerDisplayDuration_IntegerUpDown"  Value="0" />
             <TextBlock Grid.Row="7" Grid.Column="2" DockPanel.Dock="Right" Text="secondes" Margin="5,0"></TextBlock>
 
-            <TextBlock Grid.Row="8" Grid.Column="0" Text="Nombre d'images du même dossier affichées successivement" Margin="0,5"></TextBlock>
-            <xctk:IntegerUpDown Grid.Row="8" Grid.Column="1" x:Name="NumberOfSuccessiveSameFolderFiles_IntegerUpDown"  Value="0" />
-            
+            <TextBlock Grid.Row="8" Grid.Column="0" Text="Durée d'un panorama" Margin="0,5"></TextBlock>
+            <xctk:IntegerUpDown Grid.Row="8" Grid.Column="1" x:Name="PanoramaDisplayDuration_IntegerUpDown"  Value="0" />
+            <TextBlock Grid.Row="8" Grid.Column="2" DockPanel.Dock="Right" Text="secondes" Margin="5,0"></TextBlock>
+
+            <TextBlock Grid.Row="9" Grid.Column="0" Text="Nombre d'images du même dossier affichées successivement" Margin="0,5"></TextBlock>
+            <xctk:IntegerUpDown Grid.Row="9" Grid.Column="1" x:Name="NumberOfSuccessiveSameFolderFiles_IntegerUpDown"  Value="0" />
+
         </Grid>
     </DockPanel>
 </Window>

@@ -40,6 +40,7 @@ namespace ACScreenSaver
             this.TimerDurationGap_IntegerUpDown.Value = _configurationModel.TimerDurationGap / 1000;
             this.TimerDisplayDuration_IntegerUpDown.Value = _configurationModel.TimerDisplayDuration / 1000;
             this.NumberOfSuccessiveSameFolderFiles_IntegerUpDown.Value = _configurationModel.NumberOfSuccessiveSameFolderFiles;
+            this.PanoramaDisplayDuration_IntegerUpDown.Value = _configurationModel.PanoramaDisplayDuration / 1000;
         }
 
         private void Button_Parcourir_Click(object sender, RoutedEventArgs e)
@@ -74,6 +75,7 @@ namespace ACScreenSaver
             _configurationModel.TimerDurationGap = this.TimerDurationGap_IntegerUpDown.Value.Value * 1000;
             _configurationModel.TimerDisplayDuration= this.TimerDisplayDuration_IntegerUpDown.Value.Value * 1000;
             _configurationModel.NumberOfSuccessiveSameFolderFiles = this.NumberOfSuccessiveSameFolderFiles_IntegerUpDown.Value.Value;
+            _configurationModel.PanoramaDisplayDuration = this.PanoramaDisplayDuration_IntegerUpDown.Value.Value * 1000;
 
             _configurationModel.SaveConfiguration();
 

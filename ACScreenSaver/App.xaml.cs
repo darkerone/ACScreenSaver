@@ -37,8 +37,8 @@ namespace ACScreenSaver
             else if (e.Args[0].ToLower().StartsWith("/s"))
             {
                 Logger.LogDebug("Mode screen saver");
-                ScreenSaverWindow screensaver = new ScreenSaverWindow();
-                screensaver.Show();
+                ScreenSaverManager screenSaverManager = new ScreenSaverManager();
+                screenSaverManager.DisplayScreenSaverWindow();
             }
             // Config mode, launched from Settings button in screen saver dialog
             else if (e.Args[0].ToLower().StartsWith("/c"))
@@ -52,8 +52,6 @@ namespace ACScreenSaver
             else
             {
                 Logger.LogError("Aucun argument spécifié");
-                ScreenSaverWindow screensaver = new ScreenSaverWindow();
-                screensaver.Show();
             }
         }
      }

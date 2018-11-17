@@ -33,6 +33,11 @@ namespace ACScreenSaver
         /// </summary>
         private List<string> _notDisplayedImagesPathList = new List<string>();
 
+        private ScreenSaverWindow _screenSaverWindow;
+        private InformationsWindow _screenSaverInfoWindow;
+
+        private bool _isFullScreen = true;
+
         public ScreenSaverManager()
         {
             Configuration = new ConfigurationModel();
@@ -42,9 +47,28 @@ namespace ACScreenSaver
             _fileManager = new FileManager();
 
             InitImagesList();
+
+            _screenSaverWindow = new ScreenSaverWindow(this);
+            _screenSaverInfoWindow = new InformationsWindow(this);
         }
 
         #region Public methods
+
+        public void DisplayScreenSaverWindow()
+        {
+            _screenSaverInfoWindow.HideImageInformations();
+            _isFullScreen = true;
+            _screenSaverWindow.Show();
+            _screenSaverWindow.SetScreenSaverImage(GetCurrentImagePath());
+        }
+
+        public void DisplayInformationsWindow()
+        {
+            _screenSaverWindow.HideFullScreenSaver();
+            _isFullScreen = false;
+            _screenSaverInfoWindow.Show();
+            _screenSaverInfoWindow.SetImageInformations(GetCurrentImagePath());
+        }
 
         /// <summary>
         /// Renvoie l'index de l'image courante
@@ -162,10 +186,69 @@ namespace ACScreenSaver
                 filesPathToAdd.Add(GetCurrentTimeString() + " - " + GetCurrentImagePath());
                 System.IO.File.AppendAllLines(_historicFilePath, filesPathToAdd);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Logger.LogError(e.Message);
             }
+        }
+
+        /// <summary>
+        /// Affiche l'image dont l'index est passé en paramètre
+        /// </summary>
+        /// <param name="imageFileIndex"></param>
+        public void GoToImageOfIndex(int imageFileIndex)
+        {
+            SetCurrentImageIndex(imageFileIndex);
+            string nextImageFilePath = GetCurrentImagePath();
+
+            if (_isFullScreen)
+            {
+                _screenSaverWindow.SetScreenSaverImage(nextImageFilePath);
+            }
+            else
+            {
+                _screenSaverInfoWindow.SetImageInformations(nextImageFilePath);
+            }
+        }
+
+        /// <summary>
+        /// Affiche l'image suivante
+        /// </summary>
+        public void GoToNextImage()
+        {
+            int imageFileIndex = GetCurrentImageIndex();
+            // Tant qu'on a pas le droit d'afficher l'image, on prend la suivante
+            do
+            {
+                imageFileIndex = imageFileIndex + 1;
+
+                if (GetLastImageIndex() < imageFileIndex)
+                {
+                    imageFileIndex = 0;
+                }
+            } while (!CanDisplayImageOfIndex(imageFileIndex));
+
+            GoToImageOfIndex(imageFileIndex);
+        }
+
+        /// <summary>
+        /// Affiche l'image précédante
+        /// </summary>
+        public void GoToPreviousImage()
+        {
+            int imageFileIndex = GetCurrentImageIndex();
+            // Tant qu'on a pas le droit d'afficher l'image, on prend la précédante
+            do
+            {
+                imageFileIndex = imageFileIndex - 1;
+
+                if (imageFileIndex < 0)
+                {
+                    imageFileIndex = GetLastImageIndex();
+                }
+            } while (!CanDisplayImageOfIndex(imageFileIndex));
+
+            GoToImageOfIndex(imageFileIndex);
         }
 
         #endregion

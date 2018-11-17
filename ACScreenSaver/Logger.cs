@@ -32,7 +32,7 @@ namespace ACScreenSaver
             }
             catch (Exception e)
             {
-                
+                MessageBox.Show(e.Message);
             }
         }
 

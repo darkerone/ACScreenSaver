@@ -25,11 +25,6 @@ namespace ACScreenSaver
     public partial class ScreenSaverWindow : Window
     {
         /// <summary>
-        /// Définit si on est en plein écran ou non
-        /// </summary>
-        private bool _isFullDisplay = true;
-
-        /// <summary>
         /// Timer pour gérer le temps d'affichage des photos
         /// </summary>
         private Timer _imageTimer;
@@ -46,42 +41,20 @@ namespace ACScreenSaver
 
         private ScreenSaverManager _screenSaverManager;
 
-        public ScreenSaverWindow()
+        public ScreenSaverWindow(ScreenSaverManager screenSaverManager)
         {
             InitializeComponent();
 
-            _screenSaverManager = new ScreenSaverManager();
+            _screenSaverManager = screenSaverManager;
 
             _imageTimer = new System.Timers.Timer();
             SetImageTimerDuration(_screenSaverManager.Configuration.ImageDisplayDuration);
             _imageTimer.Elapsed += _timer_Elapsed;
 
             _timerDurationDisplayTimer = new System.Timers.Timer();
-
-            DisplayFullScreenSaver();
         }
 
         #region Events
-
-        /// <summary>
-        /// Au clic sur le bouton "Quitter l'écran de veille"
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Button_Quit_Click(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Application.Current.Shutdown();
-        }
-
-        /// <summary>
-        /// Au clic sur le bouton "Réafficher l'écran de veille"
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Button_FullDisplay_Click(object sender, RoutedEventArgs e)
-        {
-            DisplayFullScreenSaver();
-        }
 
         /// <summary>
         /// Lorsque l'on relache une touche
@@ -90,39 +63,36 @@ namespace ACScreenSaver
         /// <param name="e"></param>
         private void ScreenSaverWindow_KeyUp(object sender, KeyEventArgs e)
         {
-            if (_isFullDisplay)
+            switch (e.Key)
             {
-                switch (e.Key)
-                {
-                    case Key.Space:
-                        _imageTimer.Enabled = !_imageTimer.Enabled;
-                        break;
-                    case Key.Left:
-                        _imageTimer.Stop();
-                        GoToPreviousImage();
-                        _imageTimer.Start();
-                        break;
-                    case Key.Right:
-                        _imageTimer.Stop();
-                        GoToNextImage();
-                        _imageTimer.Start();
-                        break;
-                    case Key.Up:
-                        _imageTimer.Stop();
-                        TemporarilyIncreaseTimer();
-                        DisplayTimerDuration(_screenSaverManager.Configuration.TimerDisplayDuration);
-                        _imageTimer.Start();
-                        break;
-                    case Key.Down:
-                        _imageTimer.Stop();
-                        TemporarilyDecreaseTimer();
-                        DisplayTimerDuration(_screenSaverManager.Configuration.TimerDisplayDuration);
-                        _imageTimer.Start();
-                        break;
-                    default:
-                        DisplayInformations();
-                        break;
-                }
+                case Key.Space:
+                    _imageTimer.Enabled = !_imageTimer.Enabled;
+                    break;
+                case Key.Left:
+                    _imageTimer.Stop();
+                    _screenSaverManager.GoToPreviousImage();
+                    _imageTimer.Start();
+                    break;
+                case Key.Right:
+                    _imageTimer.Stop();
+                    _screenSaverManager.GoToNextImage();
+                    _imageTimer.Start();
+                    break;
+                case Key.Up:
+                    _imageTimer.Stop();
+                    TemporarilyIncreaseTimer();
+                    DisplayTimerDuration(_screenSaverManager.Configuration.TimerDisplayDuration);
+                    _imageTimer.Start();
+                    break;
+                case Key.Down:
+                    _imageTimer.Stop();
+                    TemporarilyDecreaseTimer();
+                    DisplayTimerDuration(_screenSaverManager.Configuration.TimerDisplayDuration);
+                    _imageTimer.Start();
+                    break;
+                default:
+                    _screenSaverManager.DisplayInformationsWindow();
+                    break;
             }
         }
 
@@ -133,10 +103,7 @@ namespace ACScreenSaver
         /// <param name="e"></param>
         private void ScreenSaver_Window_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (_isFullDisplay)
-            {
-                DisplayInformations();
-            }
+            _screenSaverManager.DisplayInformationsWindow();
         }
 
         /// <summary>
@@ -149,30 +116,9 @@ namespace ACScreenSaver
             // Le thread du timer n'est pas le même que le thread de l'UI donc on demande à l'UI de faire le travail
             this.Dispatcher.Invoke(() =>
             {
-                GoToNextImage();
+                _imageTimer.Stop();
+                _screenSaverManager.GoToNextImage();
             });
-        }
-
-        /// <summary>
-        /// Au clic sur le bouton "A supprimer"
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Button_AddToDeleted_Click(object sender, RoutedEventArgs e)
-        {
-            _screenSaverManager.AddCurrentImageToDeleted();
-            Button_AddToDeleted.IsEnabled = false;
-        }
-
-        /// <summary>
-        /// Au clic sur le bouton "Ne plus afficher"
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Button_AddToNotDisplayed_Click(object sender, RoutedEventArgs e)
-        {
-            _screenSaverManager.AddCurrentImageToNotDisplayed();
-            Button_AddToNotDisplayed.IsEnabled = false;
         }
 
         /// <summary>
@@ -189,48 +135,25 @@ namespace ACScreenSaver
             });
         }
 
-        /// <summary>
-        /// Au clic sur le bouton "Légende"
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Button_Legende_Click(object sender, RoutedEventArgs e)
-        {
-            LegendeWindow legendeWindow = new LegendeWindow();
-            legendeWindow.ShowDialog();
-        }
-
-        /// <summary>
-        /// Au clic sur le bouton "Précédente"
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Button_Precedent_Click(object sender, RoutedEventArgs e)
-        {
-            GoToPreviousImage();
-            DisplayInformations();
-        }
-
-        /// <summary>
-        /// Au clic sur le bouton "Suivante"
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Button_Suivant_Click(object sender, RoutedEventArgs e)
-        {
-            GoToNextImage();
-            DisplayInformations();
-        }
-
         #endregion
 
         /// <summary>
         /// Définit l'image à afficher
         /// </summary>
         /// <param name="uri"></param>
-        private void SetScreenSaverImage(string uri)
+        public void SetScreenSaverImage(string uri)
         {
-            if(uri != null)
+            this.Cursor = Cursors.None;
+
+            // Si l'interval du timer a été modifié
+            if (_isTimerDurationModified)
+            {
+                // On lui redonne sa valeur initiale
+                SetImageTimerDuration(_screenSaverManager.Configuration.ImageDisplayDuration);
+                DisplayTimerDuration(0);
+            }
+
+            if (uri != null)
             {
                 Logger.LogDebug("Affichage de l'image : " + uri);
                 ScreenSaver_Image.Source = new BitmapImage(new Uri(uri));
@@ -247,6 +170,8 @@ namespace ACScreenSaver
                 {
                     Zoom_Border.MakeImagePanorama(imgDrawing, _screenSaverManager.Configuration.PanoramaDisplayDuration);
                 }
+
+                _imageTimer.Start();
             }
             else
             {
@@ -255,108 +180,9 @@ namespace ACScreenSaver
             }
         }
 
-        /// <summary>
-        /// Affiche l'image en plein écran
-        /// </summary>
-        private void DisplayFullScreenSaver()
-        {
-            Logger.LogDebug("Affichage du screen saver");
-            _isFullDisplay = true;
-            GoToImageOfIndex(_screenSaverManager.GetCurrentImageIndex());
-            _imageTimer.Start();
-
-            ScreenSaver_Window.WindowState = WindowState.Maximized;
-            ScreenSaver_Window.WindowStyle = WindowStyle.None;
-            Image_Block.Visibility = Visibility.Visible;
-            Informations_Block.Visibility = Visibility.Collapsed;
-            this.Cursor = Cursors.None;
-        }
-
-        /// <summary>
-        /// Affiche les informations
-        /// </summary>
-        private void DisplayInformations()
-        {
-            _isFullDisplay = false;
+        public void HideFullScreenSaver() {
             _imageTimer.Stop();
-
-            ScreenSaverInformation_Image.Source = ScreenSaver_Image.Source;
-            string currentImagePath = _screenSaverManager.GetCurrentImagePath();
-            if(currentImagePath != null)
-            {
-                FileInfo imageInfo = new FileInfo(currentImagePath);
-                ImageDirectoryName_TextBlock.Text = imageInfo.FullName;
-            }
-            else
-            {
-                ImageDirectoryName_TextBlock.Text = "Aucune image n'est affichée";
-            }
-
-            ScreenSaver_Window.WindowState = WindowState.Normal;
-            ScreenSaver_Window.WindowStyle = WindowStyle.SingleBorderWindow;
-            Image_Block.Visibility = Visibility.Collapsed;
-            Informations_Block.Visibility = Visibility.Visible;
-            Button_AddToDeleted.IsEnabled = true;
-            Button_AddToNotDisplayed.IsEnabled = true;
-            this.Cursor = Cursors.Arrow;
-        }
-
-        /// <summary>
-        /// Affiche l'image dont l'index est passé en paramètre
-        /// </summary>
-        /// <param name="imageFileIndex"></param>
-        private void GoToImageOfIndex(int imageFileIndex)
-        {
-            // Si l'interval du timer a été modifié
-            if (_isTimerDurationModified)
-            {
-                // On lui redonne sa valeur initiale
-                SetImageTimerDuration(_screenSaverManager.Configuration.ImageDisplayDuration);
-                DisplayTimerDuration(0);
-            }
-            _screenSaverManager.SetCurrentImageIndex(imageFileIndex);
-            string nextImageFilePath = _screenSaverManager.GetCurrentImagePath();
-            SetScreenSaverImage(nextImageFilePath);
-        }
-
-        /// <summary>
-        /// Affiche l'image suivante
-        /// </summary>
-        private void GoToNextImage()
-        {
-            int imageFileIndex = _screenSaverManager.GetCurrentImageIndex();
-            // Tant qu'on a pas le droit d'afficher l'image, on prend la suivante
-            do
-            {
-                imageFileIndex = imageFileIndex + 1;
-
-                if (_screenSaverManager.GetLastImageIndex() < imageFileIndex)
-                {
-                    imageFileIndex = 0;
-                }
-            } while (!_screenSaverManager.CanDisplayImageOfIndex(imageFileIndex));
-            
-            GoToImageOfIndex(imageFileIndex);
-        }
-
-        /// <summary>
-        /// Affiche l'image précédante
-        /// </summary>
-        private void GoToPreviousImage()
-        {
-            int imageFileIndex = _screenSaverManager.GetCurrentImageIndex();
-            // Tant qu'on a pas le droit d'afficher l'image, on prend la précédante
-            do
-            {
-                imageFileIndex = imageFileIndex - 1;
-
-                if (imageFileIndex < 0)
-                {
-                    imageFileIndex = _screenSaverManager.GetLastImageIndex();
-                }
-            } while (!_screenSaverManager.CanDisplayImageOfIndex(imageFileIndex));
-            
-            GoToImageOfIndex(imageFileIndex);
+            this.Hide();
         }
 
         /// <summary>
@@ -374,7 +200,7 @@ namespace ACScreenSaver
         private void TemporarilyDecreaseTimer()
         {
             int newTimerDuration = (int)_imageTimer.Interval - _screenSaverManager.Configuration.TimerDurationGap;
-            if(newTimerDuration < 1000)
+            if (newTimerDuration < 1000)
             {
                 newTimerDuration = 1000;
             }
@@ -417,6 +243,6 @@ namespace ACScreenSaver
             _imageTimer.Interval = duration < 1000 ? 1000 : duration;
         }
 
-        
+
     }
 }

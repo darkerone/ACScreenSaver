@@ -45,6 +45,7 @@ namespace ACScreenSaver
                 TimerDurationGap = configurationModelTmp.TimerDurationGap;
                 TimerDisplayDuration = configurationModelTmp.TimerDisplayDuration;
                 NumberOfSuccessiveSameFolderFiles = configurationModelTmp.NumberOfSuccessiveSameFolderFiles;
+                PanoramaDisplayDuration = configurationModelTmp.PanoramaDisplayDuration;
             }
             else
             {

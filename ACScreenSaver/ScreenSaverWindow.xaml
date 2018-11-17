@@ -13,57 +13,15 @@
         KeyUp="ScreenSaverWindow_KeyUp"
         MouseUp="ScreenSaver_Window_MouseUp"
         >
-    <Grid>
-        <Grid x:Name="Image_Block" Background="Black" Visibility="Hidden" Margin="-2">
-            <utils:ZoomBorder x:Name="Zoom_Border" ClipToBounds="True" Background="Black">
-                <Image x:Name="ScreenSaver_Image"></Image>
-            </utils:ZoomBorder>
-            <TextBlock x:Name="Timer_TextBlock" HorizontalAlignment="Right" Margin="10,10,20,10" VerticalAlignment="Top" Foreground="White">
-                <TextBlock.Effect>
-                    <DropShadowEffect ShadowDepth="0" Color="Black" BlurRadius="10" />
-                </TextBlock.Effect>
-            </TextBlock>
-        </Grid>
-        <DockPanel x:Name="Informations_Block" Margin="10">
-            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Légende" Click="Button_Legende_Click"></Button>
-            </StackPanel>
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Quitter l'écran de veille" Click="Button_Quit_Click"></Button>
-                <Button Content="Réafficher l'écran de veille" Click="Button_FullDisplay_Click"></Button>
-            </StackPanel>
-            <DockPanel>
-                <Grid DockPanel.Dock="Bottom" Margin="10,0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="2*" />
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,5" HorizontalAlignment="Right">
-                        <Button x:Name="Button_AddToDeleted" Content="A supprimer" Margin="10,0" Click="Button_AddToDeleted_Click"></Button>
-                        <Button x:Name="Button_AddToNotDisplayed" Content="Ne plus afficher" Margin="10,0" Click="Button_AddToNotDisplayed_Click"></Button>
-                    </StackPanel>
-
-                    <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Margin="10,0,0,10">
-                        <TextBlock Text="Chemin de l'image : " Margin="0" FontSize="16" FontWeight="Bold"></TextBlock>
-                        <TextBlock x:Name="ImageDirectoryName_TextBlock" Margin="0,5" FontWeight="Bold" TextWrapping="Wrap" FontSize="16"></TextBlock>
-                    </StackPanel>
-                    
-                </Grid>
-                <DockPanel Margin="10">
-                    <Button DockPanel.Dock="Left" Content="&lt;" Click="Button_Precedent_Click" Margin="0" Padding="30" FontWeight="Bold" FontSize="72" Foreground="#FF7D9294"></Button>
-                    <Button DockPanel.Dock="Right" Content="&gt;" Click="Button_Suivant_Click" Margin="0" Padding="30" FontWeight="Bold" FontSize="72" Foreground="#FF7D9294"></Button>
-                    <Image x:Name="ScreenSaverInformation_Image" MinHeight="100" HorizontalAlignment="Center" VerticalAlignment="Center" >
-                    </Image>
-                </DockPanel>
-            </DockPanel>
-            
-        </DockPanel>
+    <Grid x:Name="Image_Block" Background="Black" Margin="-2">
+        <utils:ZoomBorder x:Name="Zoom_Border" ClipToBounds="True" Background="Black">
+            <Image x:Name="ScreenSaver_Image"></Image>
+        </utils:ZoomBorder>
+        <TextBlock x:Name="Timer_TextBlock" HorizontalAlignment="Right" Margin="10,10,20,10" VerticalAlignment="Top" Foreground="White">
+            <TextBlock.Effect>
+                <DropShadowEffect ShadowDepth="0" Color="Black" BlurRadius="10" />
+            </TextBlock.Effect>
+        </TextBlock>
         
     </Grid>
 </Window>
