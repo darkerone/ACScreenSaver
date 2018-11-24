@@ -9,24 +9,37 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
-namespace ACScreenSaver.Utils
+namespace ACScreenSaver.Controls
 {
     public class ZoomBorder : Border
     {
         private UIElement child = null;
         private Point origin;
         private Point start;
+        private const int exifOrientationID = 0x112; //274
 
         private TranslateTransform GetTranslateTransform(UIElement element)
         {
-            return (TranslateTransform)((TransformGroup)element.RenderTransform)
-              .Children.First(tr => tr is TranslateTransform);
+            TransformGroup transformGroup = (TransformGroup)element.RenderTransform;
+            TransformCollection transformCollection = transformGroup.Children;
+            TranslateTransform translateTransform = (TranslateTransform)transformCollection.First(tr => tr is TranslateTransform);
+            return translateTransform;
         }
 
         private ScaleTransform GetScaleTransform(UIElement element)
         {
-            return (ScaleTransform)((TransformGroup)element.RenderTransform)
-              .Children.First(tr => tr is ScaleTransform);
+            TransformGroup transformGroup = (TransformGroup)element.RenderTransform;
+            TransformCollection transformCollection = transformGroup.Children;
+            ScaleTransform scaleTransform = (ScaleTransform)transformCollection.First(tr => tr is ScaleTransform);
+            return scaleTransform;
+        }
+
+        private RotateTransform GetRotateTransform(UIElement element)
+        {
+            TransformGroup transformGroup = (TransformGroup)element.RenderTransform;
+            TransformCollection transformCollection = transformGroup.Children;
+            RotateTransform rotateTransform = (RotateTransform)transformCollection.First(tr => tr is RotateTransform);
+            return rotateTransform;
         }
 
         public override UIElement Child
@@ -50,6 +63,8 @@ namespace ACScreenSaver.Utils
                 group.Children.Add(st);
                 TranslateTransform tt = new TranslateTransform();
                 group.Children.Add(tt);
+                RotateTransform rt = new RotateTransform();
+                group.Children.Add(rt);
                 child.RenderTransform = group;
                 child.RenderTransformOrigin = new Point(0.0, 0.0);
                 this.MouseWheel += child_MouseWheel;
@@ -141,6 +156,31 @@ namespace ACScreenSaver.Utils
             }
         }
 
+        /// <summary>
+        /// Applique une rotation à l'image
+        /// </summary>
+        /// <param name="angle"></param>
+        public void RotateImage(double angle)
+        {
+            if (child != null)
+            {
+                var rt = GetRotateTransform(child);
+                rt.Angle = angle;
+            }
+        }
+
+        /// <summary>
+        /// Applique une rotation automatique à l'image en fonction de ses métadonnées
+        /// </summary>
+        /// <param name="imgDrawing"></param>
+        public void AutoRotateImage(System.Drawing.Image imgDrawing)
+        {
+            double angle = GetRotation(imgDrawing);
+            RotateImage(angle);
+        }
+
+
+
         #region Child Events
 
         private void child_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -150,7 +190,7 @@ namespace ACScreenSaver.Utils
                 var st = GetScaleTransform(child);
                 var tt = GetTranslateTransform(child);
 
-                double zoom = e.Delta > 0 ? .2 : -.2;
+                double zoom = e.Delta > 0 ? .1 : -.1;
                 if (!(e.Delta > 0) && (st.ScaleX < .4 || st.ScaleY < .4))
                     return;
 
@@ -207,6 +247,31 @@ namespace ACScreenSaver.Utils
                     tt.Y = origin.Y - v.Y;
                 }
             }
+        }
+
+        /// <summary>
+        /// Récupère la rotation nécessaire dans les métadonnées de l'image
+        /// </summary>
+        /// <param name="img"></param>
+        /// <returns></returns>
+        private double GetRotation(System.Drawing.Image img)
+        {
+            double rot = 0;
+
+            if (!img.PropertyIdList.Contains(exifOrientationID))
+                return rot;
+
+            var prop = img.GetPropertyItem(exifOrientationID);
+            int val = BitConverter.ToUInt16(prop.Value, 0);
+
+            if (val == 3 || val == 4)
+                rot = 180;
+            else if (val == 5 || val == 6)
+                rot = 90;
+            else if (val == 7 || val == 8)
+                rot = 270;
+
+            return rot;
         }
 
         #endregion

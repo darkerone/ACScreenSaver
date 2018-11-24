@@ -34,19 +34,29 @@ namespace ACScreenSaver
         /// </summary>
         public void SetImageInformations(string uri)
         {
-            if (uri != null)
+            try
             {
+                if (uri == null)
+                {
+                    throw new Exception("Aucune image n'est affichée");
+                }
+
                 ScreenSaverInformation_Image.Source = new BitmapImage(new Uri(uri));
+                System.Drawing.Image imgDrawing = System.Drawing.Image.FromFile(uri);
+                //ImageHelper.RotateImage(ScreenSaverInformation_Image, ImageHelper.GetRotation(imgDrawing));
                 FileInfo imageInfo = new FileInfo(uri);
                 ImageDirectoryName_TextBlock.Text = imageInfo.FullName;
-            }
-            else
-            {
-                ImageDirectoryName_TextBlock.Text = "Aucune image n'est affichée";
-            }
 
-            Button_AddToDeleted.IsEnabled = true;
-            Button_AddToNotDisplayed.IsEnabled = true;
+                Button_AddToDeleted.IsEnabled = true;
+                Button_AddToNotDisplayed.IsEnabled = true;
+                
+            }
+            catch (Exception ex) {
+                Logger.LogError(ex.Message);
+                ImageDirectoryName_TextBlock.Text = "Aucune image n'est affichée";
+                Button_AddToDeleted.IsEnabled = false;
+                Button_AddToNotDisplayed.IsEnabled = false;
+            }
             this.Cursor = Cursors.Arrow;
         }
 

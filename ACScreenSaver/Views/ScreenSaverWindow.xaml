@@ -1,0 +1,53 @@
+﻿<Window x:Class="ACScreenSaver.ScreenSaverWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:acControls="clr-namespace:ACScreenSaver.Controls"
+        xmlns:local="clr-namespace:ACScreenSaver"
+        mc:Ignorable="d"
+        Title="ACScreenSaver" Height="500" Width="700"
+        WindowStyle="None" ResizeMode="CanResize"  
+        WindowStartupLocation="CenterScreen" WindowState="Maximized"
+        x:Name="ScreenSaver_Window"
+        KeyUp="ScreenSaverWindow_KeyUp"
+        MouseUp="ScreenSaver_Window_MouseUp"
+        >
+    <Grid x:Name="Image_Block" Background="Black" Margin="-2">
+        <acControls:ZoomBorder x:Name="Zoom_Border" ClipToBounds="True" Background="Black">
+            <Image x:Name="ScreenSaver_Image"></Image>
+        </acControls:ZoomBorder>
+        <acControls:OutlinedTextBlock 
+            x:Name="Timer_TextBlock"
+            HorizontalAlignment="Right"  
+            VerticalAlignment="Top" 
+            Width="Auto" Height="Auto"
+            FontSize="16"
+            FontWeight="ExtraBold"
+            TextWrapping="Wrap" 
+            StrokeThickness="1" 
+            Stroke="Black" 
+            Fill="White"
+            Margin="10,20,20,10"
+            Text="5" 
+            Panel.ZIndex="10"
+            Visibility="Hidden">
+        </acControls:OutlinedTextBlock>
+        <acControls:OutlinedTextBlock 
+            x:Name="Year_TextBlock"
+            HorizontalAlignment="Left"  
+            VerticalAlignment="Bottom" 
+            Width="Auto" Height="Auto"
+            FontSize="42" 
+            FontWeight="ExtraBold"
+            TextWrapping="Wrap" 
+            StrokeThickness="2" 
+            Stroke="Black" 
+            Fill="White"
+            Margin="20,0,0,9.6"
+            Text="2018" 
+            Panel.ZIndex="10" 
+            Visibility="Hidden">
+        </acControls:OutlinedTextBlock>
+    </Grid>
+</Window>

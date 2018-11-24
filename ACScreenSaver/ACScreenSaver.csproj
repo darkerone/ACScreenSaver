@@ -99,53 +99,54 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
+    <ApplicationDefinition Include="Views\App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="InformationsWindow.xaml.cs">
+    <Compile Include="Views\InformationsWindow.xaml.cs">
       <DependentUpon>InformationsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ZoomBorder.cs" />
-    <Page Include="ConfigurationWindow.xaml">
+    <Compile Include="Controls\OutlinedTextBlock.cs" />
+    <Compile Include="Controls\ZoomBorder.cs" />
+    <Page Include="Views\ConfigurationWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="LegendeWindow.xaml">
+    <Page Include="Views\LegendeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PreviewWindow.xaml">
+    <Page Include="Views\PreviewWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="InformationsWindow.xaml">
+    <Page Include="Views\InformationsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ScreenSaverWindow.xaml">
+    <Page Include="Views\ScreenSaverWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="App.xaml.cs">
+    <Compile Include="Views\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ConfigurationModel.cs" />
-    <Compile Include="ConfigurationWindow.xaml.cs">
+    <Compile Include="Models\ConfigurationModel.cs" />
+    <Compile Include="Views\ConfigurationWindow.xaml.cs">
       <DependentUpon>ConfigurationWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FileManager.cs" />
-    <Compile Include="FileModel.cs" />
-    <Compile Include="LegendeWindow.xaml.cs">
+    <Compile Include="Managers\FileManager.cs" />
+    <Compile Include="Models\FileModel.cs" />
+    <Compile Include="Views\LegendeWindow.xaml.cs">
       <DependentUpon>LegendeWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Logger.cs" />
-    <Compile Include="ScreenSaverManager.cs" />
-    <Compile Include="PreviewWindow.xaml.cs">
+    <Compile Include="Managers\ScreenSaverManager.cs" />
+    <Compile Include="Views\PreviewWindow.xaml.cs">
       <DependentUpon>PreviewWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ScreenSaverWindow.xaml.cs">
+    <Compile Include="Views\ScreenSaverWindow.xaml.cs">
       <DependentUpon>ScreenSaverWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>

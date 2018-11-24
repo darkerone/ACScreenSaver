@@ -21,6 +21,7 @@ namespace ACScreenSaver
             TimerDisplayDuration = 2000;
             NumberOfSuccessiveSameFolderFiles = 1;
             PanoramaDisplayDuration = ImageDisplayDuration * 3;
+            IsYearDisplayed = true;
         }
 
         /// <summary>
@@ -46,6 +47,7 @@ namespace ACScreenSaver
                 TimerDisplayDuration = configurationModelTmp.TimerDisplayDuration;
                 NumberOfSuccessiveSameFolderFiles = configurationModelTmp.NumberOfSuccessiveSameFolderFiles;
                 PanoramaDisplayDuration = configurationModelTmp.PanoramaDisplayDuration;
+                IsYearDisplayed = configurationModelTmp.IsYearDisplayed;
             }
             else
             {
@@ -105,5 +107,10 @@ namespace ACScreenSaver
         /// Définit le nombre de fichiers successifs du même dossier qui seront affichés en aléatoire
         /// </summary>
         public int NumberOfSuccessiveSameFolderFiles { get; set; }
+
+        /// <summary>
+        /// Définit si l'année de la photo est affichée sur l'image ou non
+        /// </summary>
+        public bool IsYearDisplayed { get; set; }
     }
 }

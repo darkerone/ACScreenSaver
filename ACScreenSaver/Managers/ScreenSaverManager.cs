@@ -251,6 +251,26 @@ namespace ACScreenSaver
             GoToImageOfIndex(imageFileIndex);
         }
 
+        /// <summary>
+        /// Renvoie l'année de prise de l'image courante (se base sur le nom d'un dossier parent)
+        /// </summary>
+        /// <returns></returns>
+        public string GetCurrentImageYear() {
+            try
+            {
+                // Dans le dossier des images, on ne garde que le nom du premier niveau de dossiers
+                // Ex : Si "D:\User\Images" contient les dossiers "2017" et "2018", 
+                // on prend le nom du dossier auquel appartient l'image : "2017" ou "2018"
+                string currentImagePath = GetCurrentImagePath();
+                string imagePathWithoutBase = currentImagePath.Substring(Configuration.ImagesDirectoryPath.Count() + 1);
+                string[] imageParentFolders = imagePathWithoutBase.Split('\\');
+                return imageParentFolders[0];
+            }
+            catch {
+                return "";
+            }
+        }
+
         #endregion
 
         #region Private methods

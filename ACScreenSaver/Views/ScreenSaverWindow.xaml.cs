@@ -52,6 +52,7 @@ namespace ACScreenSaver
             _imageTimer.Elapsed += _timer_Elapsed;
 
             _timerDurationDisplayTimer = new System.Timers.Timer();
+            _timerDurationDisplayTimer.Elapsed += _timerDurationDisplayTimer_Elapsed;
         }
 
         #region Events
@@ -143,26 +144,33 @@ namespace ACScreenSaver
         /// <param name="uri"></param>
         public void SetScreenSaverImage(string uri)
         {
-            this.Cursor = Cursors.None;
-
-            // Si l'interval du timer a été modifié
-            if (_isTimerDurationModified)
+            try
             {
-                // On lui redonne sa valeur initiale
-                SetImageTimerDuration(_screenSaverManager.Configuration.ImageDisplayDuration);
-                DisplayTimerDuration(0);
-            }
+                this.Cursor = Cursors.None;
 
-            if (uri != null)
-            {
+                // Si l'interval du timer a été modifié
+                if (_isTimerDurationModified)
+                {
+                    // On lui redonne sa valeur initiale
+                    SetImageTimerDuration(_screenSaverManager.Configuration.ImageDisplayDuration);
+                    DisplayTimerDuration(0);
+                }
+
+                if (uri == null)
+                {
+                    throw new Exception("Chemin de l'image manquant");
+                }
+
                 Logger.LogDebug("Affichage de l'image : " + uri);
                 ScreenSaver_Image.Source = new BitmapImage(new Uri(uri));
 
                 // Réinitialise le zoom
                 Zoom_Border.Reset();
 
-                // Panorama
                 System.Drawing.Image imgDrawing = System.Drawing.Image.FromFile(uri);
+                Zoom_Border.AutoRotateImage(imgDrawing);
+
+                // Panorama
                 // Ratios
                 double imageRatio = (float)imgDrawing.Width / (float)imgDrawing.Height;
                 double screenRation = SystemParameters.WorkArea.Width / SystemParameters.WorkArea.Height;
@@ -173,13 +181,26 @@ namespace ACScreenSaver
                     Zoom_Border.MakeImagePanorama(imgDrawing, _screenSaverManager.Configuration.PanoramaDisplayDuration);
                 }
 
+                // Affichage de l'année
+                if (_screenSaverManager.Configuration.IsYearDisplayed)
+                {
+                    Year_TextBlock.Visibility = Visibility.Visible;
+                    Year_TextBlock.Text = _screenSaverManager.GetCurrentImageYear();
+                }
+                else
+                {
+                    Year_TextBlock.Visibility = Visibility.Hidden;
+                }
+
                 _imageTimer.Start();
             }
-            else
+            catch (Exception ex)
             {
-                Logger.LogError("Chemin de l'image manquant");
-                ScreenSaver_Image.Source = null;
+                Logger.LogError(ex.Message);
+                _screenSaverManager.GoToNextImage();
+                return;
             }
+            
         }
 
         public void HideFullScreenSaver() {
@@ -226,8 +247,7 @@ namespace ACScreenSaver
             {
                 Timer_TextBlock.Text = (_imageTimer.Interval / 1000).ToString();
                 Timer_TextBlock.Visibility = Visibility.Visible;
-                _timerDurationDisplayTimer.Interval = displayTime.Value * 1000;
-                _timerDurationDisplayTimer.Elapsed += _timerDurationDisplayTimer_Elapsed;
+                _timerDurationDisplayTimer.Interval = displayTime.Value;
                 _timerDurationDisplayTimer.Start();
             }
             else
@@ -244,7 +264,5 @@ namespace ACScreenSaver
         {
             _imageTimer.Interval = duration < 1000 ? 1000 : duration;
         }
-
-
     }
 }
