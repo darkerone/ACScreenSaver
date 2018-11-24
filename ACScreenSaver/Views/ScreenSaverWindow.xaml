@@ -6,12 +6,13 @@
         xmlns:acControls="clr-namespace:ACScreenSaver.Controls"
         xmlns:local="clr-namespace:ACScreenSaver"
         mc:Ignorable="d"
-        Title="ACScreenSaver" Height="500" Width="700"
+        Title="ACScreenSaver" Height="1080" Width="1920"
         WindowStyle="None" ResizeMode="CanResize"  
         WindowStartupLocation="CenterScreen" WindowState="Maximized"
         x:Name="ScreenSaver_Window"
         KeyUp="ScreenSaverWindow_KeyUp"
-        MouseUp="ScreenSaver_Window_MouseUp"
+        MouseLeftButtonUp="ScreenSaver_Window_MouseLeftButtonUp"
+        MouseMove="ScreenSaver_Window_MouseMove"
         >
     <Grid x:Name="Image_Block" Background="Black" Margin="-2">
         <acControls:ZoomBorder x:Name="Zoom_Border" ClipToBounds="True" Background="Black">
@@ -28,10 +29,10 @@
             StrokeThickness="1" 
             Stroke="Black" 
             Fill="White"
-            Margin="10,20,20,10"
+            Margin="20"
             Text="5" 
             Panel.ZIndex="10"
-            Visibility="Hidden">
+            Visibility="Visible">
         </acControls:OutlinedTextBlock>
         <acControls:OutlinedTextBlock 
             x:Name="Year_TextBlock"
@@ -44,10 +45,29 @@
             StrokeThickness="2" 
             Stroke="Black" 
             Fill="White"
-            Margin="20,0,0,9.6"
+            Margin="20"
             Text="2018" 
             Panel.ZIndex="10" 
-            Visibility="Hidden">
+            Visibility="Visible">
         </acControls:OutlinedTextBlock>
+        <Grid x:Name="Informations_Grid">
+            <acControls:OutlinedTextBlock 
+                x:Name="ImagePath_TextBlock"
+                HorizontalAlignment="Left"  
+                VerticalAlignment="Top" 
+                Width="1920" Height="auto"
+                FontSize="36" 
+                FontWeight="ExtraBold"
+                TextWrapping="Wrap" 
+                StrokeThickness="2" 
+                Stroke="Black" 
+                Fill="White"
+                Margin="20,20,0,0"
+                Text="C:\User\Images\myphoto.jpg" 
+                Panel.ZIndex="10" 
+                Visibility="Visible">
+            </acControls:OutlinedTextBlock>
+        </Grid>
+
     </Grid>
 </Window>

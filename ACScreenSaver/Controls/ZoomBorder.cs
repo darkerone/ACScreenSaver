@@ -68,8 +68,8 @@ namespace ACScreenSaver.Controls
                 child.RenderTransform = group;
                 child.RenderTransformOrigin = new Point(0.0, 0.0);
                 this.MouseWheel += child_MouseWheel;
-                this.MouseLeftButtonDown += child_MouseLeftButtonDown;
-                this.MouseLeftButtonUp += child_MouseLeftButtonUp;
+                //this.MouseLeftButtonDown += child_MouseLeftButtonDown;
+                //this.MouseLeftButtonUp += child_MouseLeftButtonUp;
                 this.MouseMove += child_MouseMove;
                 this.PreviewMouseRightButtonDown += new MouseButtonEventHandler(
                   child_PreviewMouseRightButtonDown);
@@ -209,26 +209,26 @@ namespace ACScreenSaver.Controls
             }
         }
 
-        private void child_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (child != null)
-            {
-                var tt = GetTranslateTransform(child);
-                start = e.GetPosition(this);
-                origin = new Point(tt.X, tt.Y);
-                this.Cursor = Cursors.Hand;
-                child.CaptureMouse();
-            }
-        }
+        //private void child_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        //{
+        //    if (child != null)
+        //    {
+        //        var tt = GetTranslateTransform(child);
+        //        start = e.GetPosition(this);
+        //        origin = new Point(tt.X, tt.Y);
+        //        this.Cursor = Cursors.Hand;
+        //        child.CaptureMouse();
+        //    }
+        //}
 
-        private void child_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (child != null)
-            {
-                child.ReleaseMouseCapture();
-                this.Cursor = Cursors.Arrow;
-            }
-        }
+        //private void child_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        //{
+        //    if (child != null)
+        //    {
+        //        child.ReleaseMouseCapture();
+        //        this.Cursor = Cursors.Arrow;
+        //    }
+        //}
 
         void child_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {

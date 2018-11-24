@@ -42,6 +42,7 @@ namespace ACScreenSaver
             this.NumberOfSuccessiveSameFolderFiles_IntegerUpDown.Value = _configurationModel.NumberOfSuccessiveSameFolderFiles;
             this.PanoramaDisplayDuration_IntegerUpDown.Value = _configurationModel.PanoramaDisplayDuration / 1000;
             this.IsYearDisplayed_CheckBox.IsChecked = _configurationModel.IsYearDisplayed;
+            this.DisplayInformationsDuration_IntegerUpDown.Value = _configurationModel.DisplayInformationDuration / 1000;
         }
 
         private void Button_Parcourir_Click(object sender, RoutedEventArgs e)
@@ -78,6 +79,7 @@ namespace ACScreenSaver
             _configurationModel.NumberOfSuccessiveSameFolderFiles = this.NumberOfSuccessiveSameFolderFiles_IntegerUpDown.Value.Value;
             _configurationModel.PanoramaDisplayDuration = this.PanoramaDisplayDuration_IntegerUpDown.Value.Value * 1000;
             _configurationModel.IsYearDisplayed = this.IsYearDisplayed_CheckBox.IsChecked.Value;
+            _configurationModel.DisplayInformationDuration = this.DisplayInformationsDuration_IntegerUpDown.Value.Value * 1000;
 
             _configurationModel.SaveConfiguration();
 

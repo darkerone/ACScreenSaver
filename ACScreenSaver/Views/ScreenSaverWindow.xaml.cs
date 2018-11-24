@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -39,6 +40,13 @@ namespace ACScreenSaver
         /// </summary>
         private Timer _timerDurationDisplayTimer;
 
+        /// <summary>
+        /// Timer pour gérer le temps d'affichage des informations
+        /// </summary>
+        private Timer _informationsDisplayTimer;
+
+        public static Stopwatch _stopwatch = new Stopwatch();
+
         private ScreenSaverManager _screenSaverManager;
 
         public ScreenSaverWindow(ScreenSaverManager screenSaverManager)
@@ -47,12 +55,21 @@ namespace ACScreenSaver
 
             _screenSaverManager = screenSaverManager;
 
-            _imageTimer = new System.Timers.Timer();
+            _imageTimer = new Timer();
             SetImageTimerDuration(_screenSaverManager.Configuration.ImageDisplayDuration);
             _imageTimer.Elapsed += _timer_Elapsed;
 
-            _timerDurationDisplayTimer = new System.Timers.Timer();
+            _timerDurationDisplayTimer = new Timer();
             _timerDurationDisplayTimer.Elapsed += _timerDurationDisplayTimer_Elapsed;
+
+            _informationsDisplayTimer = new Timer();
+            _informationsDisplayTimer.Elapsed += _informationsDisplayTimer_Elapsed;
+
+            Informations_Grid.Visibility = Visibility.Hidden;
+            Timer_TextBlock.Visibility = Visibility.Hidden;
+            Year_TextBlock.Visibility = Visibility.Hidden;
+
+            _stopwatch.Start();
         }
 
         #region Events
@@ -102,9 +119,22 @@ namespace ACScreenSaver
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ScreenSaver_Window_MouseUp(object sender, MouseButtonEventArgs e)
+        private void ScreenSaver_Window_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             _screenSaverManager.DisplayInformationsWindow();
+        }
+
+        /// <summary>
+        /// Lorsque la souris bouge
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ScreenSaver_Window_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (_stopwatch.ElapsedTicks % 50L == 0L)
+            {
+                DisplayInformations(_screenSaverManager.Configuration.DisplayInformationDuration);
+            }
         }
 
         /// <summary>
@@ -133,6 +163,20 @@ namespace ACScreenSaver
             this.Dispatcher.Invoke(() =>
             {
                 DisplayTimerDuration(0);
+            });
+        }
+
+        /// <summary>
+        /// Quand le timer d'affichage des informations est écoulé
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void _informationsDisplayTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            // Le thread du timer n'est pas le même que le thread de l'UI donc on demande à l'UI de faire le travail
+            this.Dispatcher.Invoke(() =>
+            {
+                DisplayInformations(0);
             });
         }
 
@@ -192,6 +236,9 @@ namespace ACScreenSaver
                     Year_TextBlock.Visibility = Visibility.Hidden;
                 }
 
+                // Affichage des informations
+                ImagePath_TextBlock.Text = uri;
+
                 _imageTimer.Start();
             }
             catch (Exception ex)
@@ -234,7 +281,7 @@ namespace ACScreenSaver
         /// <summary>
         /// Affiche l'interval du timer pendant le temps demandé
         /// </summary>
-        /// <param name="displayTime">Temps (en seconde) d'affichage. Infini si null.</param>
+        /// <param name="displayTime">Temps (en milliseconde) d'affichage. Infini si null.</param>
         private void DisplayTimerDuration(int? displayTime = null)
         {
             _timerDurationDisplayTimer.Stop();
@@ -263,6 +310,29 @@ namespace ACScreenSaver
         private void SetImageTimerDuration(double duration)
         {
             _imageTimer.Interval = duration < 1000 ? 1000 : duration;
+        }
+
+        /// <summary>
+        /// Affiche les informations pendant le temps demandé
+        /// </summary>
+        /// <param name="displayTime">Temps (en milliseconde) d'affichage. Infini si null.</param>
+        private void DisplayInformations(int? displayTime = null)
+        {
+            _informationsDisplayTimer.Stop();
+            if (displayTime == null)
+            {
+                Informations_Grid.Visibility = Visibility.Visible;
+            }
+            else if (displayTime > 0)
+            {
+                Informations_Grid.Visibility = Visibility.Visible;
+                _informationsDisplayTimer.Interval = displayTime.Value;
+                _informationsDisplayTimer.Start();
+            }
+            else
+            {
+                Informations_Grid.Visibility = Visibility.Hidden;
+            }
         }
     }
 }
