@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace ACScreenSaver
 {
@@ -22,6 +23,12 @@ namespace ACScreenSaver
             NumberOfSuccessiveSameFolderFiles = 1;
             PanoramaDisplayDuration = ImageDisplayDuration * 3;
             IsYearDisplayed = true;
+            YearColor = new Color() {
+                R = 255,
+                G = 185,
+                B = 0,
+                A = 178,
+            };
             DisplayInformationDuration = 3000;
         }
 
@@ -49,6 +56,7 @@ namespace ACScreenSaver
                 NumberOfSuccessiveSameFolderFiles = configurationModelTmp.NumberOfSuccessiveSameFolderFiles;
                 PanoramaDisplayDuration = configurationModelTmp.PanoramaDisplayDuration;
                 IsYearDisplayed = configurationModelTmp.IsYearDisplayed;
+                YearColor = configurationModelTmp.YearColor;
                 DisplayInformationDuration = configurationModelTmp.DisplayInformationDuration;
             }
             else
@@ -114,6 +122,11 @@ namespace ACScreenSaver
         /// Définit si l'année de la photo est affichée sur l'image ou non
         /// </summary>
         public bool IsYearDisplayed { get; set; }
+
+        /// <summary>
+        /// Définit la couleur du texte de l'année
+        /// </summary>
+        public Color YearColor { get; set; }
 
         /// <summary>
         /// Temps d'affichage d'des informations (en millisecondes)

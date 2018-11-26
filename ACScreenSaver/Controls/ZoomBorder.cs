@@ -165,18 +165,38 @@ namespace ACScreenSaver.Controls
             if (child != null)
             {
                 var rt = GetRotateTransform(child);
+                Point oldRenderTransformOrigin = child.RenderTransformOrigin;
+                child.RenderTransformOrigin = new Point(0.5, 0.5);
                 rt.Angle = angle;
             }
         }
 
         /// <summary>
-        /// Applique une rotation automatique à l'image en fonction de ses métadonnées
+        /// Applique une rotation automatique à l'image en fonction de ses métadonnées.
+        /// Redimensionne l'image pour qu'elle passe dans l'écran.
         /// </summary>
         /// <param name="imgDrawing"></param>
         public void AutoRotateImage(System.Drawing.Image imgDrawing)
         {
             double angle = GetRotation(imgDrawing);
-            RotateImage(angle);
+
+            if(angle != 0)
+            {
+                RotateImage(angle);
+
+                if(angle == 90 || angle == 270)
+                {
+                    // Ratios
+                    double imageRatio = (float)imgDrawing.Width / (float)imgDrawing.Height;
+
+                    // Calcul les dimensions de l'image si sa hauteur est celle de l'écran
+                    double imageWidthResizedFromHeight = (float)SystemParameters.WorkArea.Height * imageRatio;
+
+                    // Redimensionne l'image pour que sa hauteur soit celle de l'écran
+                    Rescale((float)SystemParameters.WorkArea.Height / imageWidthResizedFromHeight);
+                }
+            }
+            
         }
 
 

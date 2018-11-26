@@ -15,41 +15,9 @@
         MouseMove="ScreenSaver_Window_MouseMove"
         >
     <Grid x:Name="Image_Block" Background="Black" Margin="-2">
-        <acControls:ZoomBorder x:Name="Zoom_Border" ClipToBounds="True" Background="Black">
+        <acControls:ZoomBorder x:Name="Zoom_Border" ClipToBounds="True" Background="Gray">
             <Image x:Name="ScreenSaver_Image"></Image>
         </acControls:ZoomBorder>
-        <acControls:OutlinedTextBlock 
-            x:Name="Timer_TextBlock"
-            HorizontalAlignment="Right"  
-            VerticalAlignment="Top" 
-            Width="Auto" Height="Auto"
-            FontSize="16"
-            FontWeight="ExtraBold"
-            TextWrapping="Wrap" 
-            StrokeThickness="1" 
-            Stroke="Black" 
-            Fill="White"
-            Margin="20"
-            Text="5" 
-            Panel.ZIndex="10"
-            Visibility="Visible">
-        </acControls:OutlinedTextBlock>
-        <acControls:OutlinedTextBlock 
-            x:Name="Year_TextBlock"
-            HorizontalAlignment="Left"  
-            VerticalAlignment="Bottom" 
-            Width="Auto" Height="Auto"
-            FontSize="42" 
-            FontWeight="ExtraBold"
-            TextWrapping="Wrap" 
-            StrokeThickness="2" 
-            Stroke="Black" 
-            Fill="White"
-            Margin="20"
-            Text="2018" 
-            Panel.ZIndex="10" 
-            Visibility="Visible">
-        </acControls:OutlinedTextBlock>
         <Grid x:Name="Informations_Grid">
             <acControls:OutlinedTextBlock 
                 x:Name="ImagePath_TextBlock"
@@ -68,6 +36,68 @@
                 Visibility="Visible">
             </acControls:OutlinedTextBlock>
         </Grid>
+        <acControls:OutlinedTextBlock 
+            x:Name="Timer_TextBlock"
+            HorizontalAlignment="Right"  
+            VerticalAlignment="Top" 
+            Width="Auto" Height="Auto"
+            FontSize="16"
+            FontWeight="ExtraBold" 
+            StrokeThickness="1" 
+            Stroke="Black" 
+            Fill="White"
+            Margin="20"
+            Text="5" 
+            Panel.ZIndex="10"
+            Visibility="Visible"/>
+        <Grid>
+
+        </Grid>
+        <!--<acControls:OutlinedTextBlock 
+            x:Name="Year_TextBlock"
+           Style="{StaticResource Seg7FontFamily}"
+            HorizontalAlignment="Left"  
+            VerticalAlignment="Bottom" 
+            Width="1839"
+            FontSize="55" 
+            FontWeight="Bold"
+            TextWrapping="Wrap" 
+            StrokeThickness="2" 
+            Stroke="#7F000000" 
+            Fill="#E5FFB900"
+            Margin="20,20,20,0"
+            Text="2 0 1 8" 
+            Panel.ZIndex="10" 
+            Visibility="Visible" Height="80"/>-->
+        <Grid
+            x:Name="Year_Grid"
+            HorizontalAlignment="Left"  
+            VerticalAlignment="Bottom"
+            Style="{StaticResource SquaredGradient}"
+            Margin="0, 0, 0, 0">
+            <TextBlock
+                x:Name="Year_TextBlock"
+                Style="{StaticResource Seg7FontFamily}"
+                HorizontalAlignment="Center"  
+                VerticalAlignment="Center"
+                FontSize="55" 
+                TextWrapping="Wrap" 
+                Foreground="#B2FFB900"
+                Margin="10,5,10,-5"
+                Text="2 0 1 8" 
+                Panel.ZIndex="10" 
+                Visibility="Visible"
+                RenderTransformOrigin="0.5,0.5"
+            >
+            <!--<TextBlock.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black" Offset="0.313"/>
+                    <GradientStop Color="#00000000"/>
+                </LinearGradientBrush>
+            </TextBlock.Background>-->
+            </TextBlock>
+        </Grid>
+        
 
     </Grid>
 </Window>

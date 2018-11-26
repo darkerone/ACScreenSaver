@@ -14,5 +14,24 @@
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize" Value="16"/>
         </Style>
+        <!--Font family : 7 segments-->
+        <Style x:Key="Seg7FontFamily">
+            <Setter Property="TextElement.FontFamily" Value="pack://ACScreenSaver:,,,/Resources/Fonts/#Digital Dismay" />
+        </Style>
+        <Style TargetType="{x:Type Grid}" x:Key="SquaredGradient">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <VisualBrush Viewbox="0.2,0.1,0.7,0.7">
+                        <VisualBrush.Visual>
+                            <Border Width="100" Height="100" CornerRadius="10" Background="#7F000000">
+                                <Border.Effect>
+                                    <BlurEffect Radius="20"/>
+                                </Border.Effect>
+                            </Border>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Application.Resources>
 </Application>

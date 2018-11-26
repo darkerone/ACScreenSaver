@@ -65,9 +65,11 @@ namespace ACScreenSaver
             _informationsDisplayTimer = new Timer();
             _informationsDisplayTimer.Elapsed += _informationsDisplayTimer_Elapsed;
 
+            Zoom_Border.Background = Brushes.Black;
             Informations_Grid.Visibility = Visibility.Hidden;
             Timer_TextBlock.Visibility = Visibility.Hidden;
-            Year_TextBlock.Visibility = Visibility.Hidden;
+            Year_Grid.Visibility = Visibility.Hidden;
+            Year_TextBlock.Foreground = new SolidColorBrush(_screenSaverManager.Configuration.YearColor);
 
             _stopwatch.Start();
         }
@@ -188,6 +190,8 @@ namespace ACScreenSaver
         /// <param name="uri"></param>
         public void SetScreenSaverImage(string uri)
         {
+            //// Todo : à supprimer
+            //uri = @"D:\Moi\Images\2017\DSC_0276.JPG";
             try
             {
                 this.Cursor = Cursors.None;
@@ -228,12 +232,13 @@ namespace ACScreenSaver
                 // Affichage de l'année
                 if (_screenSaverManager.Configuration.IsYearDisplayed)
                 {
-                    Year_TextBlock.Visibility = Visibility.Visible;
-                    Year_TextBlock.Text = _screenSaverManager.GetCurrentImageYear();
+                    Year_Grid.Visibility = Visibility.Visible;
+                    Year_TextBlock.Text = System.Text.RegularExpressions.Regex.Replace(_screenSaverManager.GetCurrentImageYear(), ".{1}", "$0 ");
+
                 }
                 else
                 {
-                    Year_TextBlock.Visibility = Visibility.Hidden;
+                    Year_Grid.Visibility = Visibility.Hidden;
                 }
 
                 // Affichage des informations
