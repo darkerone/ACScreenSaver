@@ -1,6 +1,9 @@
 # ACScreenSaver
 Ecran de veille pour faire défiler des photos et afficher des informations sur les photos
 
+# Problématique
+L'écran de veille Windows d'origine ne permet pas de savoir où se trouve la photo sur le disque dur ou de savoir à quel évennement/année elle correspond.
+
 ## Presentation
 ACScreenSaver est un écran de veille permettant de faire passer des photos.
 Une multitude de fonctionnalités existent en plus de celles proposées par l'écran de veille photo classique de Windows.
